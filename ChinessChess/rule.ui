@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Rule</class>
+ <widget class="QWidget" name="Rule">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>658</width>
+    <height>634</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600; font-style:italic; color:#00007f;&quot;&gt;游戏规则&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1" colspan="2">
+    <spacer name="horizontalSpacer_3">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>162</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="0" column="3">
+    <spacer name="horizontalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>1</width>
+       <height>17</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="0" colspan="3">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'SimSun'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:14pt; font-weight:600;&quot;&gt;基本下法&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt;&quot;&gt;帅（将）：帅（将）是棋中的首脑，是双方竭力争夺的目标。它只能在九宫之内活动，可上可下，可左&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt;&quot;&gt;可右，每次走动只能按竖线或横线走动一格。帅与将不能在同一直线上直接对面，否则走方判负。&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt;&quot;&gt;仕（士）：仕（士）是将（帅）的&lt;/span&gt;&lt;a href=&quot;http://baike.so.com/doc/3088900.html&quot;&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt; text-decoration: underline; color:#0000ff;&quot;&gt;贴身保镖&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt;&quot;&gt;，它也只能在九宫内走动。它的行棋路径只有九宫内的四条&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt;&quot;&gt;斜线。&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt;&quot;&gt;相（象）：相（象）的主要作用是防守，保护自己的帅（将）。它的走法是每次循&lt;/span&gt;&lt;a href=&quot;http://baike.so.com/doc/5356817.html&quot;&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt; text-decoration: underline; color:#0000ff;&quot;&gt;对角线&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt;&quot;&gt;走两格，俗&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt;&quot;&gt;称“&lt;/span&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;象飞田&lt;/span&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt;&quot;&gt;”&lt;/span&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;。相（象）的活动范围限于河界以内的本方阵地，不能过河，且如果它走的田字中央有一个&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt;&quot;&gt;棋子，就不能走，俗称“&lt;/span&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;塞&lt;/span&gt;&lt;a href=&quot;http://baike.so.com/doc/2735758.html&quot;&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt; text-decoration: underline; color:#0000ff;&quot;&gt;象眼&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt;&quot;&gt;”&lt;/span&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;。&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt;&quot;&gt;车：车在象棋中威力最大，无论横线、竖线均可行走，只要无子阻拦，步数不受限制。因此，一车可以&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt;&quot;&gt;控制十七个点，故有“&lt;/span&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;一车十子寒&lt;/span&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt;&quot;&gt;”&lt;/span&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;之称。&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt;&quot;&gt;炮：炮在不吃子的时候，移动与车完全相同。当吃&lt;/span&gt;&lt;a href=&quot;http://baike.so.com/doc/3209971.html&quot;&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt; text-decoration: underline; color:#0000ff;&quot;&gt;子时&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt;&quot;&gt;，己方和对方的棋子中间必须间隔1&lt;/span&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;个棋子（无&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt;&quot;&gt;论对方或己方棋子），炮是象棋中唯一可以越子的棋种。&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt;&quot;&gt;马：马走动的方法是一直一斜，即先横着或直着走一格，然后再斜着走一个对角线，俗称“&lt;/span&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;马走日&lt;/span&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt;&quot;&gt;”&lt;/span&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;。马&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt;&quot;&gt;一次可走的选择点可以达到四周的八个点，故有“&lt;/span&gt;&lt;a href=&quot;http://baike.so.com/doc/4726369.html&quot;&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt; text-decoration: underline; color:#0000ff;&quot;&gt;八面威风&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt;&quot;&gt;”&lt;/span&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;之说。如果在要去的方向有别的棋子挡住，&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt;&quot;&gt;马就无法走过去，俗称“&lt;/span&gt;&lt;a href=&quot;http://baike.so.com/doc/3210418.html&quot;&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt; text-decoration: underline; color:#0000ff;&quot;&gt;蹩马腿&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt;&quot;&gt;”&lt;/span&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;。&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt;&quot;&gt;兵（卒）：兵（卒）在未过河前，只能向前一步步走，过河以后，除不能后退外，允许左右移动，但也&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt;&quot;&gt;只能一次一步，即使这样，兵（卒）的威力也大大增强，故有“&lt;/span&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;过河的&lt;/span&gt;&lt;a href=&quot;http://baike.so.com/doc/780643.html&quot;&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt; text-decoration: underline; color:#0000ff;&quot;&gt;卒子&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt;&quot;&gt;顶半个车”&lt;/span&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;之说。&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:14pt; font-weight:600;&quot;&gt;口语歌:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt;&quot;&gt;马走日字，象飞田，车走直路，炮翻山。士走斜路护将边，小卒一去不回还。&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Calibri'; font-size:10.5pt;&quot;&gt; &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="2">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>162</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="2" column="2">
+    <widget class="QPushButton" name="pushButton">
+     <property name="text">
+      <string>关闭</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Rule</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>384</x>
+     <y>344</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>421</x>
+     <y>27</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

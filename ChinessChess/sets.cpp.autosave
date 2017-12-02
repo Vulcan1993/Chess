@@ -1,0 +1,11 @@
+#include "sets.h"
+
+Sets::Sets(QWidget *parent)
+    :QDialog(parent)
+{
+    campLabel = new QLabel("请选择阵营: ");
+    campComboBox = new QComboBox;
+     
+    campComboBox->addItem("红方");
+
+}

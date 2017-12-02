@@ -1,0 +1,20 @@
+#ifndef SETS_H
+#define SETS_H
+#include<QDialog>
+#include<QLabel>
+#include<QComboBox>
+#include<QPushButton>
+class Sets : public QDialog 
+{
+public:
+    Sets( QWidget *parent = 0);
+    QLabel *campLabel;
+    QLabel *xianLabel;
+    QComboBox *campComboBox;
+    QComboBox *xianComboBox;
+    QPushButton *qdBtn;
+    QPushButton *qxBtn;
+    
+};
+
+#endif // SETS_H

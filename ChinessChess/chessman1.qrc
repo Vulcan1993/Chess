@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/chessman">
+        <file>images/chessman1/blackJiang.png</file>
+        <file>images/chessman1/blackJu.png</file>
+        <file>images/chessman1/blackMa.png</file>
+        <file>images/chessman1/blackPao.png</file>
+        <file>images/chessman1/blackShi.png</file>
+        <file>images/chessman1/blackXiang.png</file>
+        <file>images/chessman1/blackZu.png</file>
+        <file>images/chessman1/redJiang.png</file>
+        <file>images/chessman1/redJu.png</file>
+        <file>images/chessman1/redMa.png</file>
+        <file>images/chessman1/redPao.png</file>
+        <file>images/chessman1/redShi.png</file>
+        <file>images/chessman1/redXiang.png</file>
+        <file>images/chessman1/redZu.png</file>
+    </qresource>
+</RCC>

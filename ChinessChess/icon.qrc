@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/icon">
+        <file>images/icon/next.png</file>
+        <file>images/icon/open.png</file>
+        <file>images/icon/previous.png</file>
+        <file>images/icon/save.png</file>
+        <file>images/icon/splash.png</file>
+        <file>images/icon/undo.png</file>
+        <file>images/icon/zoomin.png</file>
+        <file>images/icon/zoomout.png</file>
+        <file>images/icon/back.png</file>
+        <file>images/icon/begin2.png</file>
+        <file>images/icon/craven.png</file>
+        <file>images/icon/cue.png</file>
+        <file>images/icon/pause.png</file>
+        <file>images/icon/substitution.png</file>
+    </qresource>
+</RCC>

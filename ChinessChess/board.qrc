@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/board">
+        <file alias="blueBorder">images/blueBorder.GIF</file>
+        <file alias="redBorder">images/redBorder.GIF</file>
+        <file alias="boardwq">images/board_晚秋.png</file>
+        <file alias="kaishi">images/kaishi.jpg</file>
+    </qresource>
+</RCC>
