@@ -2,34 +2,34 @@
 MultiPage::MultiPage(QWidget *parent)
     :QWidget(parent)
 {
-    lAhead = new QLabel("请选择: ");
-    lAhead->setStyleSheet("QLabel{font:bold 16px; color:blue}");
-    lCamp = new QLabel("请选择:");
-        lCamp->setStyleSheet("QLabel{font:bold 16px; color:blue}");
-    cAhead = new QComboBox;
-        cAhead->setStyleSheet("QComboBox{font:bold 16px; color:blue}");
-    cAhead->setEditable(false);
-    cAhead->addItem("红方先行");
-    cAhead->addItem("黑方先行");
-    comCamp = new QComboBox;
-        comCamp->setStyleSheet("QComboBox{font:bold 16px; color:blue}");
-    comCamp->addItem("红方在棋盘下方");
-    comCamp->addItem("黑方在棋盘下方");
+    m_lAhead = new QLabel("请选择: ");
+    m_lAhead->setStyleSheet("QLabel{font:bold 16px; color:blue}");
+    m_lCamp = new QLabel("请选择:");
+        m_lCamp->setStyleSheet("QLabel{font:bold 16px; color:blue}");
+    m_cAhead = new QComboBox;
+        m_cAhead->setStyleSheet("QComboBox{font:bold 16px; color:blue}");
+    m_cAhead->setEditable(false);
+    m_cAhead->addItem("红方先行");
+    m_cAhead->addItem("黑方先行");
+    m_comCamp = new QComboBox;
+        m_comCamp->setStyleSheet("QComboBox{font:bold 16px; color:blue}");
+    m_comCamp->addItem("红方在棋盘下方");
+    m_comCamp->addItem("黑方在棋盘下方");
     QGridLayout *lay = new QGridLayout(this);
-    lay->addWidget(lAhead,0,0);
-    lay->addWidget(cAhead,0,1);
-    lay->addWidget(lCamp,1,0);
-    lay->addWidget(comCamp,1,1);
+    lay->addWidget(m_lAhead,0,0);
+    lay->addWidget(m_cAhead,0,1);
+    lay->addWidget(m_lCamp,1,0);
+    lay->addWidget(m_comCamp,1,1);
 }
 
 void MultiPage::setting(Camp &xian, Camp &player)
 {
-    if(comCamp->currentIndex() == 0)
+    if(m_comCamp->currentIndex() == 0)
         player = red;
     else
         player = black;
 
-    if(cAhead->currentIndex() == 0)
+    if(m_cAhead->currentIndex() == 0)
         xian = red;
     else
         xian = black;

@@ -18,12 +18,12 @@ public:
 protected:
     void resizeEvent(QResizeEvent *event);
 public:
-    stacked *s;
-    QImage _image;          //加载背景图片
-    QPushButton *btn1;
-    QPushButton *btn2;
-    QPushButton *btn3;
-    QPushButton *btn4;
+    stacked *m_stack;
+    QImage m_backgroundImage;          //加载背景图片
+    QPushButton *m_btn1;
+    QPushButton *m_btn2;
+    QPushButton *m_btn3;
+    QPushButton *m_btn4;
 private slots:
 
 };

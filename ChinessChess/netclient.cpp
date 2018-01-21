@@ -16,16 +16,16 @@ void NetClient::mousePressEvent(QMouseEvent *ev)
 {
 
     //游戏结束后不允许再走
-    if(gameOver)
+    if(m_gameOver)
         return;
     //不该本方走的时候不能随便点击
-    if(alternate != playerCamp)
+    if(m_alternate != m_playerCamp)
         return;
     int row,col;
     //把点击的点转换为数组对应的行列值
     coordinateToRow(ev->pos(),row,col);
     //把点击的点转换成棋盘数组对应的点
-    if(playerCamp == black)
+    if(m_playerCamp == black)
         toClientRow(row,col);
 
     //把点击的点传给对方,
@@ -51,7 +51,7 @@ void NetClient::mouseClick(int row, int col)
         if(whetherTheGameIsOver(winner))
         {
             //已分出胜负
-            gameOver = true;
+            m_gameOver = true;
             if(winner == red)
             {
                 QTimer::singleShot(300,this,SLOT(slotShowRedVictory()));
@@ -127,19 +127,19 @@ void NetClient::slotReadyRead()
                 if(buf.at(2) == 0)
                 {
                     //0 0 0 表示执红先行
-                    xianCamp = red;
-                    playerCamp = red;
-                    initImage(playerCamp,2);
+                    m_xianCamp = red;
+                    m_playerCamp = red;
+                    initImage(m_playerCamp,2);
                     Board::restart();
 
 
                     //"默认模式 : 人人对战 , 执红 , 红方先行  "
                     QString str = "当前模式 : 网络对战 , ";
-                    if(playerCamp == red)
+                    if(m_playerCamp == red)
                         str += "执红 , ";
                     else
                         str += "执黑 , ";
-                    if(alternate == red)
+                    if(m_alternate == red)
                         str += "红方先行  ";
                     else
                         str +="黑方先行";
@@ -150,19 +150,19 @@ void NetClient::slotReadyRead()
                 else
                 {
                     //0 0 1 表示执红后行
-                    xianCamp = black;
-                    playerCamp = red;
-                    initImage(playerCamp,2);
+                    m_xianCamp = black;
+                    m_playerCamp = red;
+                    initImage(m_playerCamp,2);
                     Board::restart();
 
 
                     //"默认模式 : 人人对战 , 执红 , 红方先行  "
                     QString str = "当前模式 : 网络对战 , ";
-                    if(playerCamp == red)
+                    if(m_playerCamp == red)
                         str += "执红 , ";
                     else
                         str += "执黑 , ";
-                    if(alternate == red)
+                    if(m_alternate == red)
                         str += "红方先行  ";
                     else
                         str +="黑方先行";
@@ -174,18 +174,18 @@ void NetClient::slotReadyRead()
                 if(buf.at(2) == 0)
                 {
                     //0 1 0 表示执黑先行
-                    xianCamp = red;
-                    playerCamp = black;
-                    initImage(playerCamp,2);
+                    m_xianCamp = red;
+                    m_playerCamp = black;
+                    initImage(m_playerCamp,2);
                     Board::restart();
 
                     //"默认模式 : 人人对战 , 执红 , 红方先行  "
                     QString str = "当前模式 : 网络对战 , ";
-                    if(playerCamp == red)
+                    if(m_playerCamp == red)
                         str += "执红 , ";
                     else
                         str += "执黑 , ";
-                    if(alternate == red)
+                    if(m_alternate == red)
                         str += "红方先行  ";
                     else
                         str +="黑方先行";
@@ -196,17 +196,17 @@ void NetClient::slotReadyRead()
                 else
                 {
                     //0 1 1 表示执黑后行
-                    xianCamp = red;
-                    playerCamp = black;
-                    initImage(playerCamp,2);
+                    m_xianCamp = red;
+                    m_playerCamp = black;
+                    initImage(m_playerCamp,2);
                     Board::restart();
                     //"默认模式 : 人人对战 , 执红 , 红方先行  "
                     QString str = "当前模式 : 网络对战 , ";
-                    if(playerCamp == red)
+                    if(m_playerCamp == red)
                         str += "执红 , ";
                     else
                         str += "执黑 , ";
-                    if(alternate == red)
+                    if(m_alternate == red)
                         str += "红方先行  ";
                     else
                         str +="黑方先行";
@@ -215,8 +215,8 @@ void NetClient::slotReadyRead()
                 }
                 break;
             }
-            gameOver = false;
-            if(alternate == red)
+            m_gameOver = false;
+            if(m_alternate == red)
                 emit changeState("当前状态 : 红方下");
             else
                 emit changeState("当前状态 : 黑方下");
@@ -269,8 +269,8 @@ void NetClient::slotReadyRead()
         case 5:
             QMessageBox::information(this,"游戏开始","已加入棋局,游戏开始",
                                      QMessageBox::Ok);
-            gameOver = false;
-            if(alternate == red)
+            m_gameOver = false;
+            if(m_alternate == red)
                 emit changeState("当前状态 : 红方下");
             else
                 emit changeState("当前状态 : 黑方下");
@@ -360,11 +360,11 @@ void NetClient::slotSetMode()
 {
     //"默认模式 : 人人对战 , 执红 , 红方先行  "
     QString str = "当前模式 : 网络对战 , ";
-    if(playerCamp == red)
+    if(m_playerCamp == red)
         str += "执红 , ";
     else
         str += "执黑 , ";
-    if(alternate == red)
+    if(m_alternate == red)
         str += "红方先行  ";
     else
         str +="黑方先行";

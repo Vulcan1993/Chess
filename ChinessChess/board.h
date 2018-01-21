@@ -24,29 +24,29 @@ public:
     //重写resizeEvent,当大小改变时,重新设置格子宽度和高度
     void resizeEvent(QResizeEvent *event);
 protected:
-    Camp playerCamp = red;      //记录玩家的阵营,初始化为red
-    Camp xianCamp;
-    QPoint windowSize;          //记录窗口尺寸
+    Camp m_playerCamp = red;      //记录玩家的阵营,初始化为red
+    Camp m_xianCamp;
+    QPoint m_windowSize;          //记录窗口尺寸
     //记录该哪一方落子了, 初始化为red,同时起到控制哪一方先走
-    Camp alternate = red;
-    ChessMan chessMan[32];      //记录32颗棋子的状态
-    signed char board[10][9];   //存储棋盘每个点的状态
-    QImage images[14];          //14种棋子图片
-    QImage imageSelectedBorder; //选择棋子时显示的红色边框
-    QImage imageFinallyMove;    //移动完棋子时显示的蓝色边框,提示这是最后移动的棋子
-    QSize scaleSize;            //缩放尺寸
-    int dr;                     //画棋子时确定偏移量(其值为100-半径);
+    Camp m_alternate = red;
+    ChessMan m_chessMan[32];      //记录32颗棋子的状态
+    signed char m_board[10][9];   //存储棋盘每个点的状态
+    QImage m_images[14];          //14种棋子图片
+    QImage m_imageSelectedBorder; //选择棋子时显示的红色边框
+    QImage m_imageFinallyMove;    //移动完棋子时显示的蓝色边框,提示这是最后移动的棋子
+    QSize m_scaleSize;            //缩放尺寸
+    int m_dr;                     //画棋子时确定偏移量(其值为100-半径);
 
     //用于获取鼠标点击对应的数组中的行和列值
-    int boardGridWidth;         //记录当前棋盘格子的宽度
-    int boardGridHeigh;         //记录当前棋盘格子的高度
-    char selectedChessMan = -1;   //记录当前选择的棋子,为-1时表示没有选择棋子
-    char finallyMoveChessMan = -1;  //记录最后移动的棋子,-1表示没有最后移动的棋子
-    vector<Step*> vStep;			//记录走棋信息,便于悔棋
+    int m_boardGridWidth;         //记录当前棋盘格子的宽度
+    int m_boardGridHeigh;         //记录当前棋盘格子的高度
+    char m_selectedChessMan = -1;   //记录当前选择的棋子,为-1时表示没有选择棋子
+    char m_finallyMoveChessMan = -1;  //记录最后移动的棋子,-1表示没有最后移动的棋子
+    vector<Step*> m_vStep;			//记录走棋信息,便于悔棋
     //先初始化为true,刚开始时不让走,点击开始按钮才让走
-    bool gameOver = true;		//记录游戏是否结束,为true时表示结束
-    Step *step;
-    QPixmap pixmapBacks;        //加载棋盘图片
+    bool m_gameOver = true;		//记录游戏是否结束,为true时表示结束
+    Step *m_step;
+    QPixmap m_pixmapBacks;        //加载棋盘图片
 
 protected:
     //初始化棋子和棋盘

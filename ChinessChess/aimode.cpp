@@ -7,7 +7,7 @@ AiMode::AiMode(Camp xian, Camp playerCamp, QWidget *parent, int level)
         500, 300, 150, 100, 1000000, 100, 150, 300, 500, 300, 300, 100, 100, 100, 100, 100 };
     for (int i = 0; i < 32; ++i)
     {
-        value[i] = value_tmp[i];
+        m_value[i] = value_tmp[i];
     }
 
 
@@ -16,34 +16,34 @@ AiMode::AiMode(Camp xian, Camp playerCamp, QWidget *parent, int level)
     {
         for (int j = 0; j < 2; ++j)
         {
-            direction[i][j] = direction_tmp[i][j];
+            m_direction[i][j] = direction_tmp[i][j];
         }
     }
 
 
-    searchLevel = level;
+    m_searchLevel = level;
     //设置估值函数指针
     assessTheSituation = &AiMode::staticAssess;
     //极大极小分析法
    // searchTheBestStep = MinimaxMethod;
     searchTheBestStep = &AiMode::pruning;
-    xianCamp = xian;
-    this->playerCamp = playerCamp;
+    m_xianCamp = xian;
+    this->m_playerCamp = playerCamp;
     if(playerCamp == red)
-        aiCamp = black;
+        m_aiCamp = black;
     else
     {
-        aiCamp = red;
+        m_aiCamp = red;
     }
 }
 
 void AiMode::mousePressEvent(QMouseEvent *ev)
 {
     //游戏结束后不允许再走
-    if(gameOver)
+    if(m_gameOver)
         return;
     //不该人走的时候使人的点击失效
-    if(alternate != playerCamp)
+    if(m_alternate != m_playerCamp)
         return;
 #if 1
     int row,col;
@@ -51,7 +51,7 @@ void AiMode::mousePressEvent(QMouseEvent *ev)
     coordinateToRow(ev->pos(),row,col);
 
     //把点击的点转换成棋盘数组对应的点
-    if(playerCamp == black)
+    if(m_playerCamp == black)
         toClientRow(row,col);
 
     if(ev->button() == Qt::LeftButton)
@@ -63,7 +63,7 @@ void AiMode::mousePressEvent(QMouseEvent *ev)
             if(whetherTheGameIsOver(winner))
             {
                 //已分出胜负
-                gameOver = true;
+                m_gameOver = true;
                 if(winner == red)
                 {
                     QTimer::singleShot(300,this,SLOT(slotShowRedVictory()));
@@ -97,12 +97,12 @@ int AiMode::staticAssess(Camp camp)
     int i;
     for(i=0 ; i<16 ; ++i)
     {
-        if(chessMan[i].state != died)
-            valueBlack += value[i];
+        if(m_chessMan[i].state != died)
+            valueBlack += m_value[i];
     }
     for(i=16 ; i<32 ; ++i)
-        if(chessMan[i].state != died)
-            valueRed += value[i];
+        if(m_chessMan[i].state != died)
+            valueRed += m_value[i];
     if(camp == red)
         return valueRed - valueBlack;
     else
@@ -118,7 +118,7 @@ vector<Step *> *AiMode::getAllStep(Camp camp)
     {
         for(int i=16 ; i<32 ; ++i)
         {
-            if(chessMan[i].state != died)
+            if(m_chessMan[i].state != died)
             {
                 vStep = generateAllSteps(i);
                 //把vStep中所有的合法走步都插入到vAllStep后面
@@ -131,7 +131,7 @@ vector<Step *> *AiMode::getAllStep(Camp camp)
     {
         for(int i=0 ; i<16 ; ++i)
         {
-            if(chessMan[i].state != died)
+            if(m_chessMan[i].state != died)
             {
 
                 vStep = generateAllSteps(i);
@@ -148,7 +148,7 @@ vector<Step *> *AiMode::getAllStep(Camp camp)
 vector<Step *> *AiMode::generateAllSteps(int id)
 {
     //vector<Step *> *vs = new
-    switch(chessMan[id].type)
+    switch(m_chessMan[id].type)
     {
     case redJu:
         return generateStepJu(id);
@@ -194,7 +194,7 @@ bool AiMode::checkTwoCamp(const Step *step)
     if(step->toId != -1)
     {
         //自相残杀时返回false
-        if(chessMan[step->fromId].camp == chessMan[step->toId].camp)
+        if(m_chessMan[step->fromId].camp == m_chessMan[step->toId].camp)
             return false;
     }
     return true;
@@ -205,20 +205,20 @@ vector<Step *> *AiMode::generateStepJu(int id)
 {
     vector<Step*> * vStep = new vector<Step*>;
     int row,col;
-    row = chessMan[id].row;
-    col = chessMan[id].col;
+    row = m_chessMan[id].row;
+    col = m_chessMan[id].col;
     for(int i=0 ; i<4 ; ++i)
     {
         Step *step;
         //依次查找上下左右四个方向
-        row = chessMan[id].row + direction[i][0];
-        col = chessMan[id].col + direction[i][1];
+        row = m_chessMan[id].row + m_direction[i][0];
+        col = m_chessMan[id].col + m_direction[i][1];
         while(true)
         {
             //越界,结束本方向的查找
             if(!judgeRow(row,col))
                 break;
-            if(board[row][col] == -1)
+            if(m_board[row][col] == -1)
             {
                 //此时位置合法
                 //构造Step加入vStep(不用再检查,一定合法)
@@ -228,7 +228,7 @@ vector<Step *> *AiMode::generateStepJu(int id)
             else
             {
                 //此时找到这个方向的第一颗棋子,如果不是同一阵营则合法
-                if(chessMan[board[row][col]].camp != chessMan[id].camp)
+                if(m_chessMan[m_board[row][col]].camp != m_chessMan[id].camp)
                 {
                     step = generateStep(id,row,col);
                     vStep->push_back(step);
@@ -237,8 +237,8 @@ vector<Step *> *AiMode::generateStepJu(int id)
                 break;
             }
             //继续查找下一个位置
-            row = row + direction[i][0];
-            col = col + direction[i][1];
+            row = row + m_direction[i][0];
+            col = col + m_direction[i][1];
         }
     }
     return vStep;
@@ -250,21 +250,21 @@ vector<Step *> *AiMode::generateStepMa(int id)
     //先把所有可能的走步保存起来,再依次判断
     vector<Step *> *vp = new vector<Step*>;
     Step * step;
-    step = generateStep(id,chessMan[id].row+1,chessMan[id].col+2);
+    step = generateStep(id,m_chessMan[id].row+1,m_chessMan[id].col+2);
     vp->push_back(step);
-    step = generateStep(id,chessMan[id].row+1,chessMan[id].col-2);
+    step = generateStep(id,m_chessMan[id].row+1,m_chessMan[id].col-2);
     vp->push_back(step);
-    step = generateStep(id,chessMan[id].row-1,chessMan[id].col+2);
+    step = generateStep(id,m_chessMan[id].row-1,m_chessMan[id].col+2);
     vp->push_back(step);
-    step = generateStep(id,chessMan[id].row-1,chessMan[id].col-2);
+    step = generateStep(id,m_chessMan[id].row-1,m_chessMan[id].col-2);
     vp->push_back(step);
-    step = generateStep(id,chessMan[id].row+2,chessMan[id].col+1);
+    step = generateStep(id,m_chessMan[id].row+2,m_chessMan[id].col+1);
     vp->push_back(step);
-    step = generateStep(id,chessMan[id].row+2,chessMan[id].col-1);
+    step = generateStep(id,m_chessMan[id].row+2,m_chessMan[id].col-1);
     vp->push_back(step);
-    step = generateStep(id,chessMan[id].row-2,chessMan[id].col+1);
+    step = generateStep(id,m_chessMan[id].row-2,m_chessMan[id].col+1);
     vp->push_back(step);
-    step = generateStep(id,chessMan[id].row-2,chessMan[id].col-1);
+    step = generateStep(id,m_chessMan[id].row-2,m_chessMan[id].col-1);
     vp->push_back(step);
 
     int i;
@@ -303,22 +303,22 @@ vector<Step *> *AiMode::generateStepPao(int id)
 {
     vector<Step*> * vStep = new vector<Step*>;
     int row,col;
-    row = chessMan[id].row;
-    col = chessMan[id].col;
+    row = m_chessMan[id].row;
+    col = m_chessMan[id].col;
     bool first = false;		//记录是否找到第一个棋子
     Step *step;
     for(int i=0 ; i<4 ; ++i)
     {
         first = false;		//记录是否找到第一颗棋子
         //依次查找上下左右四个方向
-        row = chessMan[id].row + direction[i][0];
-        col = chessMan[id].col + direction[i][1];
+        row = m_chessMan[id].row + m_direction[i][0];
+        col = m_chessMan[id].col + m_direction[i][1];
         while(true)
         {
             //越界,结束本方向的查找
             if(!judgeRow(row,col))
                 break;
-            if(board[row][col] == -1)
+            if(m_board[row][col] == -1)
             {
                 //未找到该方向的第一颗棋子时,空白的点都可落子
                 if(!first)
@@ -335,7 +335,7 @@ vector<Step *> *AiMode::generateStepPao(int id)
                 if(first)
                 {
                     //此时找到这个方向的第一颗棋子,如果不是同一阵营则合法
-                    if(chessMan[board[row][col]].camp != chessMan[id].camp)
+                    if(m_chessMan[m_board[row][col]].camp != m_chessMan[id].camp)
                     {
                         step = generateStep(id,row,col);
                         vStep->push_back(step);
@@ -350,8 +350,8 @@ vector<Step *> *AiMode::generateStepPao(int id)
                 }
             }
             //继续查找下一个位置
-            row = row + direction[i][0];
-            col = col + direction[i][1];
+            row = row + m_direction[i][0];
+            col = col + m_direction[i][1];
         }
     }
     return vStep;
@@ -363,13 +363,13 @@ vector<Step *> *AiMode::generateRedXiang(int id)
     //先把所有可能的走步保存起来,再依次判断
     vector<Step *> *vp = new vector<Step*>;
     Step * step;
-    step = generateStep(id,chessMan[id].row+2,chessMan[id].col+2);
+    step = generateStep(id,m_chessMan[id].row+2,m_chessMan[id].col+2);
     vp->push_back(step);
-    step = generateStep(id,chessMan[id].row+2,chessMan[id].col-2);
+    step = generateStep(id,m_chessMan[id].row+2,m_chessMan[id].col-2);
     vp->push_back(step);
-    step = generateStep(id,chessMan[id].row-2,chessMan[id].col+2);
+    step = generateStep(id,m_chessMan[id].row-2,m_chessMan[id].col+2);
     vp->push_back(step);
-    step = generateStep(id,chessMan[id].row-2,chessMan[id].col-2);
+    step = generateStep(id,m_chessMan[id].row-2,m_chessMan[id].col-2);
     vp->push_back(step);
 
     int i;
@@ -411,13 +411,13 @@ vector<Step *> *AiMode::generateRedShi(int id)
     //先把所有可能的走步保存起来,再依次判断
     vector<Step *> *vp = new vector<Step*>;
     Step * step;
-    step = generateStep(id,chessMan[id].row+1,chessMan[id].col+1);
+    step = generateStep(id,m_chessMan[id].row+1,m_chessMan[id].col+1);
     vp->push_back(step);
-    step = generateStep(id,chessMan[id].row+1,chessMan[id].col-1);
+    step = generateStep(id,m_chessMan[id].row+1,m_chessMan[id].col-1);
     vp->push_back(step);
-    step = generateStep(id,chessMan[id].row-1,chessMan[id].col+1);
+    step = generateStep(id,m_chessMan[id].row-1,m_chessMan[id].col+1);
     vp->push_back(step);
-    step = generateStep(id,chessMan[id].row-1,chessMan[id].col-1);
+    step = generateStep(id,m_chessMan[id].row-1,m_chessMan[id].col-1);
     vp->push_back(step);
 
     int i;
@@ -458,16 +458,16 @@ vector<Step *> *AiMode::generateRedJiang(int id)
     //先把所有可能的走步保存起来,再依次判断
     vector<Step *> *vp = new vector<Step*>;
     Step * step;
-    step = generateStep(id,chessMan[id].row+1,chessMan[id].col);
+    step = generateStep(id,m_chessMan[id].row+1,m_chessMan[id].col);
     vp->push_back(step);
-    step = generateStep(id,chessMan[id].row-1,chessMan[id].col);
+    step = generateStep(id,m_chessMan[id].row-1,m_chessMan[id].col);
     vp->push_back(step);
-    step = generateStep(id,chessMan[id].row,chessMan[id].col+1);
+    step = generateStep(id,m_chessMan[id].row,m_chessMan[id].col+1);
     vp->push_back(step);
-    step = generateStep(id,chessMan[id].row,chessMan[id].col-1);
+    step = generateStep(id,m_chessMan[id].row,m_chessMan[id].col-1);
     vp->push_back(step);
     //将帅见面时
-    step = generateStep(id,chessMan[4].row,chessMan[4].col);
+    step = generateStep(id,m_chessMan[4].row,m_chessMan[4].col);
     vp->push_back(step);
     //判断每一走步
     while(!vp->empty())
@@ -510,13 +510,13 @@ vector<Step *> *AiMode::generateRedZu(int id)
     vector<Step *> *vp = new vector<Step*>;
     Step * step;
     //向上一步
-    step = generateStep(id,chessMan[id].row-1,chessMan[id].col);
+    step = generateStep(id,m_chessMan[id].row-1,m_chessMan[id].col);
     vp->push_back(step);
     //向右一步
-    step = generateStep(id,chessMan[id].row,chessMan[id].col+1);
+    step = generateStep(id,m_chessMan[id].row,m_chessMan[id].col+1);
     vp->push_back(step);
     //向左一步
-    step = generateStep(id,chessMan[id].row,chessMan[id].col-1);
+    step = generateStep(id,m_chessMan[id].row,m_chessMan[id].col-1);
     vp->push_back(step);
     //判断每一走步
     int i;
@@ -557,13 +557,13 @@ vector<Step *> *AiMode::generateBlackXiang(int id)
     //先把所有可能的走步保存起来,再依次判断
     vector<Step *> *vp = new vector<Step*>;
     Step * step;
-    step = generateStep(id,chessMan[id].row+2,chessMan[id].col+2);
+    step = generateStep(id,m_chessMan[id].row+2,m_chessMan[id].col+2);
     vp->push_back(step);
-    step = generateStep(id,chessMan[id].row+2,chessMan[id].col-2);
+    step = generateStep(id,m_chessMan[id].row+2,m_chessMan[id].col-2);
     vp->push_back(step);
-    step = generateStep(id,chessMan[id].row-2,chessMan[id].col+2);
+    step = generateStep(id,m_chessMan[id].row-2,m_chessMan[id].col+2);
     vp->push_back(step);
-    step = generateStep(id,chessMan[id].row-2,chessMan[id].col-2);
+    step = generateStep(id,m_chessMan[id].row-2,m_chessMan[id].col-2);
     vp->push_back(step);
 
     int i;
@@ -605,13 +605,13 @@ vector<Step *> *AiMode::generateBlackShi(int id)
     //先把所有可能的走步保存起来,再依次判断
     vector<Step *> *vp = new vector<Step*>;
     Step * step;
-    step = generateStep(id,chessMan[id].row+1,chessMan[id].col+1);
+    step = generateStep(id,m_chessMan[id].row+1,m_chessMan[id].col+1);
     vp->push_back(step);
-    step = generateStep(id,chessMan[id].row+1,chessMan[id].col-1);
+    step = generateStep(id,m_chessMan[id].row+1,m_chessMan[id].col-1);
     vp->push_back(step);
-    step = generateStep(id,chessMan[id].row-1,chessMan[id].col+1);
+    step = generateStep(id,m_chessMan[id].row-1,m_chessMan[id].col+1);
     vp->push_back(step);
-    step = generateStep(id,chessMan[id].row-1,chessMan[id].col-1);
+    step = generateStep(id,m_chessMan[id].row-1,m_chessMan[id].col-1);
     vp->push_back(step);
 
     int i;
@@ -653,16 +653,16 @@ vector<Step *> *AiMode::generateBlackJiang(int id)
     //先把所有可能的走步保存起来,再依次判断
     vector<Step *> *vp = new vector<Step*>;
     Step * step;
-    step = generateStep(id,chessMan[id].row+1,chessMan[id].col);
+    step = generateStep(id,m_chessMan[id].row+1,m_chessMan[id].col);
     vp->push_back(step);
-    step = generateStep(id,chessMan[id].row-1,chessMan[id].col);
+    step = generateStep(id,m_chessMan[id].row-1,m_chessMan[id].col);
     vp->push_back(step);
-    step = generateStep(id,chessMan[id].row,chessMan[id].col+1);
+    step = generateStep(id,m_chessMan[id].row,m_chessMan[id].col+1);
     vp->push_back(step);
-    step = generateStep(id,chessMan[id].row,chessMan[id].col-1);
+    step = generateStep(id,m_chessMan[id].row,m_chessMan[id].col-1);
     vp->push_back(step);
     //将帅见面时
-    step = generateStep(id,chessMan[20].row,chessMan[20].col);
+    step = generateStep(id,m_chessMan[20].row,m_chessMan[20].col);
     vp->push_back(step);
     //判断每一走步
     while(!vp->empty())
@@ -705,13 +705,13 @@ vector<Step *> *AiMode::generateBlackZu(int id)
     vector<Step *> *vp = new vector<Step*>;
     Step * step;
     //向下一步
-    step = generateStep(id,chessMan[id].row+1,chessMan[id].col);
+    step = generateStep(id,m_chessMan[id].row+1,m_chessMan[id].col);
     vp->push_back(step);
     //向右一步
-    step = generateStep(id,chessMan[id].row,chessMan[id].col+1);
+    step = generateStep(id,m_chessMan[id].row,m_chessMan[id].col+1);
     vp->push_back(step);
     //向左一步
-    step = generateStep(id,chessMan[id].row,chessMan[id].col-1);
+    step = generateStep(id,m_chessMan[id].row,m_chessMan[id].col-1);
     vp->push_back(step);
     //判断每一走步
     int i;
@@ -751,13 +751,13 @@ int AiMode::getMaxScore(int level)
 {
     //达到要求的搜索深度,不再往下扩展,直接返回局面估值
     if(level <= 0)
-        return (this->*assessTheSituation)(aiCamp);
+        return (this->*assessTheSituation)(m_aiCamp);
     //Step *maxStep = NULL;		//记录最大估值的走步
     Step *tmpStep = NULL;
     int maxScore = -1000000;		//记录最大估值
     int tmpScore = -1000000;
     //获得所有合法走步
-    vector<Step*> *vMaxStep = getAllStep(aiCamp);
+    vector<Step*> *vMaxStep = getAllStep(m_aiCamp);
     while(!vMaxStep->empty())
     {
         //获取vector中的最后一个元素
@@ -800,13 +800,13 @@ int AiMode::getMinScore(int level)
 {
     //达到要求的搜索深度,不再往下扩展,直接返回局面估值
     if(level <= 0)
-        return (this->*assessTheSituation)(aiCamp);
+        return (this->*assessTheSituation)(m_aiCamp);
     //Step *minStep = NULL;		//记录最大估值的走步
     Step *tmpStep = NULL;
     int minScore = 1000000;		//记录最大估值
     int tmpScore = 1000000;
     //获得所有合法走步
-    vector<Step*> *vMinStep = getAllStep(playerCamp);
+    vector<Step*> *vMinStep = getAllStep(m_playerCamp);
     while(!vMinStep->empty())
     {
         //获取vector中的最后一个元素
@@ -858,7 +858,7 @@ Step* AiMode::MinimaxMethod()
     int maxScore = -1000000;		//记录最大估值
     int tmpScore = -1000000;
     //获得所有合法走步
-    vector<Step*> *vMaxStep = getAllStep(aiCamp);
+    vector<Step*> *vMaxStep = getAllStep(m_aiCamp);
     while(!vMaxStep->empty())
     {
         //获取vector中的最后一个元素
@@ -872,7 +872,7 @@ Step* AiMode::MinimaxMethod()
                <<tmpStep->toRow<<tmpStep->toCol;
 #endif
         //估值
-        tmpScore = getMinScore(searchLevel-1);
+        tmpScore = getMinScore(m_searchLevel-1);
 
         if(maxScore <tmpScore)
         {
@@ -906,13 +906,13 @@ int AiMode::pruningMaxScore(int level, int max)
 {
     //达到要求的搜索深度,不再往下扩展,直接返回局面估值
     if(level <= 0)
-        return (this->*assessTheSituation)(aiCamp);
+        return (this->*assessTheSituation)(m_aiCamp);
     //Step *maxStep = NULL;		//记录最大估值的走步
     Step *tmpStep = NULL;
     int maxScore = -1000000;		//记录最大估值
     int tmpScore = -1000000;
     //获得所有合法走步
-    vector<Step*> *vMaxStep = getAllStep(aiCamp);
+    vector<Step*> *vMaxStep = getAllStep(m_aiCamp);
     while(!vMaxStep->empty())
     {
         //获取vector中的最后一个元素
@@ -973,13 +973,13 @@ int AiMode::pruningMinScore(int level, int min)
 {
     //达到要求的搜索深度,不再往下扩展,直接返回局面估值
     if(level <= 0)
-        return (this->*assessTheSituation)(aiCamp);
+        return (this->*assessTheSituation)(m_aiCamp);
     //Step *minStep = NULL;		//记录最大估值的走步
     Step *tmpStep = NULL;
     int minScore = 1000000;		//记录最大估值
     int tmpScore = 1000000;
     //获得所有合法走步
-    vector<Step*> *vMinStep = getAllStep(playerCamp);
+    vector<Step*> *vMinStep = getAllStep(m_playerCamp);
     while(!vMinStep->empty())
     {
         //获取vector中的最后一个元素
@@ -1047,7 +1047,7 @@ Step *AiMode::pruning()
     int maxScore = -1000000;		//记录最大估值
     int tmpScore = -1000000;
     //获得所有合法走步
-    vector<Step*> *vMaxStep = getAllStep(aiCamp);
+    vector<Step*> *vMaxStep = getAllStep(m_aiCamp);
     while(!vMaxStep->empty())
     {
         //获取vector中的最后一个元素
@@ -1061,7 +1061,7 @@ Step *AiMode::pruning()
                <<tmpStep->toRow<<tmpStep->toCol;
 #endif
         //估值
-        tmpScore = pruningMinScore(searchLevel-1,maxScore);
+        tmpScore = pruningMinScore(m_searchLevel-1,maxScore);
 
         if(maxScore <tmpScore)
         {
@@ -1111,20 +1111,20 @@ void AiMode::slotDebug()
 
 void AiMode::slotComputerClick()
 {
-    if(alternate != aiCamp)
+    if(m_alternate != m_aiCamp)
         return;
     Step *step = (this->*searchTheBestStep)();
     if(step!=NULL)
     {
         moveChessMan(*step);
-        finallyMoveChessMan = step->fromId;
+        m_finallyMoveChessMan = step->fromId;
         recordStep(step);
         //当确实走棋后判断是否分出胜负
         Camp winner;
         if(whetherTheGameIsOver(winner))
         {
             //已分出胜负
-            gameOver = true;
+            m_gameOver = true;
             if(winner == red)
             {
                 QTimer::singleShot(300,this,SLOT(slotShowRedVictory()));
@@ -1148,17 +1148,17 @@ void AiMode::restart()
     //重新设置棋子和棋盘位置
     initChess();
     //重新设置游戏结束标志
-    gameOver = false;
+    m_gameOver = false;
     //销毁vStep里所有的走步
-    for(Step* item : vStep)
+    for(Step* item : m_vStep)
         delete item;
     //清空悔棋信息数组
-    vStep.clear();
+    m_vStep.clear();
     //设置谁先走
-    alternate  = xianCamp;
+    m_alternate  = m_xianCamp;
     //设置为没有最后移动的棋子
-    finallyMoveChessMan = -1;
-    if(alternate == aiCamp)
+    m_finallyMoveChessMan = -1;
+    if(m_alternate == m_aiCamp)
         QTimer::singleShot(1000,this,SLOT(slotComputerClick()));
     update();
 }
@@ -1172,7 +1172,7 @@ void AiMode::undoStep()
 void AiMode::slotStart()
 {
 
-    if(aiCamp == alternate)
+    if(m_aiCamp == m_alternate)
         QTimer::singleShot(100,this,SLOT(slotComputerClick()));
 
     Board::slotStart();

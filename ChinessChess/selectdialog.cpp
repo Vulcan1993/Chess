@@ -4,23 +4,23 @@
 selectDialog ::selectDialog (QWidget *parent, Qt::WindowFlags f)
     : QDialog(parent, f)
 {
-    s = new stacked;
-    btn1 = new QPushButton("one");
+    m_stack = new stacked;
+    m_btn1 = new QPushButton("one");
 
-    btn2 = new QPushButton("开始");
-    connect(btn2,SIGNAL(clicked(bool)),this,SLOT(accept()));
-    btn3 = new QPushButton("退出");
-    connect(btn3,SIGNAL(clicked(bool)),this,SLOT(reject()));
-    btn4 = new QPushButton("four");
+    m_btn2 = new QPushButton("开始");
+    connect(m_btn2,SIGNAL(clicked(bool)),this,SLOT(accept()));
+    m_btn3 = new QPushButton("退出");
+    connect(m_btn3,SIGNAL(clicked(bool)),this,SLOT(reject()));
+    m_btn4 = new QPushButton("four");
     QHBoxLayout *hLay = new QHBoxLayout();
     //QSpacerItem *spacer = new QSpacerItem(400,200);
     //hLay->addItem(spacer);
         hLay->addStretch(1);
     hLay->addStretch(1);
 
-    hLay->addWidget(btn2);
+    hLay->addWidget(m_btn2);
         hLay->addStretch(1);
-    hLay->addWidget(btn3);
+    hLay->addWidget(m_btn3);
     hLay->addStretch(1);
         hLay->addStretch(1);
 
@@ -34,10 +34,10 @@ selectDialog ::selectDialog (QWidget *parent, Qt::WindowFlags f)
     hlay2->addStretch(1);
 
     vLay->addLayout(hlay2);
-    vLay->addWidget(s,3);
+    vLay->addWidget(m_stack,3);
     vLay->addLayout(hLay,1);
     //填充背景图片
-    _image.load(":/board/kaishi");
+    m_backgroundImage.load(":/board/kaishi");
     setAutoFillBackground(true);
 }
 
@@ -54,7 +54,7 @@ void selectDialog::resizeEvent(QResizeEvent *event)
 
 // 注意下面这一行，就是靠他实现大小拉伸～～～
     pal.setBrush(QPalette::Window,
-                QBrush(_image.scaled(size(), Qt::IgnoreAspectRatio,
+                QBrush(m_backgroundImage.scaled(size(), Qt::IgnoreAspectRatio,
                         Qt::SmoothTransformation)));
     setPalette(pal);
 }

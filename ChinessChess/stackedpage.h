@@ -14,10 +14,10 @@ class MultiPage : public QWidget
 public:
     MultiPage(QWidget *parent=0);
 
-    QLabel *lAhead;
-    QLabel *lCamp;				//提示,阵营
-    QComboBox *cAhead;
-    QComboBox *comCamp;
+    QLabel *m_lAhead;
+    QLabel *m_lCamp;				//提示,阵营
+    QComboBox *m_cAhead;
+    QComboBox *m_comCamp;
     void setting(Camp &xian,Camp &player);
 
 };

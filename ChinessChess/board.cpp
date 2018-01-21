@@ -9,9 +9,9 @@ Board::Board(Camp xian, Camp playerCamp, QWidget *parent)
 
     //initImage(false,2);
     //设置哪方先走
-    alternate = xian;
-    xianCamp = xian;
-    this->playerCamp = playerCamp;
+    m_alternate = xian;
+    m_xianCamp = xian;
+    this->m_playerCamp = playerCamp;
     initImage(playerCamp,2);
 
     //等50毫秒再发送信号,因为此时信号和槽还未连接,如果程序在50毫秒内没有连接
@@ -24,9 +24,9 @@ Board::Board(Camp xian, Camp playerCamp, QWidget *parent)
         initImage(false,1);
 #endif
     //重设格子宽度和高度,
-    boardGridWidth = width()/10;
-    boardGridHeigh = height()/11;
-    pixmapBacks.load(":/board/boardwq");
+    m_boardGridWidth = width()/10;
+    m_boardGridHeigh = height()/11;
+    m_pixmapBacks.load(":/board/boardwq");
 
     resize(500,600);
 }
@@ -34,7 +34,7 @@ Board::Board(Camp xian, Camp playerCamp, QWidget *parent)
 
 void Board::paintEvent(QPaintEvent *)
 {
-    QPixmap pixmap = pixmapBacks;
+    QPixmap pixmap = m_pixmapBacks;
     //加载棋盘图片
    // pixmap.load(":/board/board");
     QPainter p;
@@ -73,7 +73,7 @@ void Board::paintEvent(QPaintEvent *)
     QPixmap fitPixmap = pixmap.scaled(width(),height(), Qt::IgnoreAspectRatio);
 
 #if 1
-    if(playerCamp == black)
+    if(m_playerCamp == black)
     {
         //旋转
         //求中心点
@@ -94,14 +94,14 @@ void Board::paintEvent(QPaintEvent *)
 void Board::mousePressEvent(QMouseEvent *ev)
 {
     //游戏结束后不允许再走
-    if(gameOver)
+    if(m_gameOver)
         return;
 #if 1
     int row,col;
     //把点击的点转换为数组对应的行列值
     coordinateToRow(ev->pos(),row,col);
     //把点击的点转换成棋盘数组对应的点
-    if(playerCamp == black)
+    if(m_playerCamp == black)
         toClientRow(row,col);
     if(ev->button() == Qt::LeftButton)
     {
@@ -112,7 +112,7 @@ void Board::mousePressEvent(QMouseEvent *ev)
             if(whetherTheGameIsOver(winner))
             {
                 //已分出胜负
-                gameOver = true;
+                m_gameOver = true;
                 if(winner == red)
                 {
                     QTimer::singleShot(300,this,SLOT(slotShowRedVictory()));
@@ -135,23 +135,23 @@ void Board::mousePressEvent(QMouseEvent *ev)
 void Board::resizeEvent(QResizeEvent *)
 {
 
-    boardGridWidth = width()/10;
-    boardGridHeigh = height()/11;
+    m_boardGridWidth = width()/10;
+    m_boardGridHeigh = height()/11;
 
 }
 //把屏幕坐标转换成对应的数组的行列值
 void Board::coordinateToRow(QPoint point, int &row, int &col)
 {
-    if(point.x()<boardGridWidth/2 || point.x()> width()-boardGridWidth/2
-            || point.y() < boardGridHeigh/2 || point.y() > height()-boardGridHeigh/2)
+    if(point.x()<m_boardGridWidth/2 || point.x()> width()-m_boardGridWidth/2
+            || point.y() < m_boardGridHeigh/2 || point.y() > height()-m_boardGridHeigh/2)
     {
         col = -1;
         row = -1;
     }
     else
     {
-        col = (point.x()-boardGridWidth/2)/boardGridWidth ;
-        row = (point.y()-boardGridHeigh/2)/boardGridHeigh ;
+        col = (point.x()-m_boardGridWidth/2)/m_boardGridWidth ;
+        row = (point.y()-m_boardGridHeigh/2)/m_boardGridHeigh ;
     }   
 }
 //判断行列值是否合法,合法返回true,不合法返回false;
@@ -168,17 +168,17 @@ void Board::moveChessMan(const Step &step)
     int fromId = step.fromId;
     int toId = step.toId;          //获取(toRow,toCol)位置的棋子id;
     //设置棋子数组中棋子的新位置
-    chessMan[fromId].row = step.toRow;
-    chessMan[fromId].col = step.toCol;
+    m_chessMan[fromId].row = step.toRow;
+    m_chessMan[fromId].col = step.toCol;
     
     if(toId != -1)                              //该点有棋子
     {
-        chessMan[toId].state = died;            //棋子出局
+        m_chessMan[toId].state = died;            //棋子出局
     }
     //更新棋盘中的记录
     //更新棋盘中的记录
-    board[step.fromRow][step.fromCol] = -1;               //设置该位置无棋子
-    board[step.toRow][step.toCol] = fromId;
+    m_board[step.fromRow][step.fromCol] = -1;               //设置该位置无棋子
+    m_board[step.toRow][step.toCol] = fromId;
 
 }
 //把棋子移回去(重载函数),出局的棋子最后保存的就是它最后呆的位置
@@ -190,41 +190,41 @@ void Board::moveChessMan(const Step &step,int)
     if(step.toId != -1)
     {
         //恢复
-        chessMan[id].state = alive;
-        board[step.toRow][step.toCol] = id;
+        m_chessMan[id].state = alive;
+        m_board[step.toRow][step.toCol] = id;
     }
     else
     {
-        board[step.toRow][step.toCol] = -1;
+        m_board[step.toRow][step.toCol] = -1;
     }
 
     //把fromId的棋子移回去
     id = step.fromId;
-    chessMan[id].row = step.fromRow;
-    chessMan[id].col = step.fromCol;
-    board[step.fromRow][step.fromCol] = id;
+    m_chessMan[id].row = step.fromRow;
+    m_chessMan[id].col = step.fromCol;
+    m_board[step.fromRow][step.fromCol] = id;
 
 }
 
 //记录走棋信息
 void Board::recordStep(Step *step)
 {
-    vStep.push_back(step);
+    m_vStep.push_back(step);
 }
 
 //悔棋
 void Board::undoStep()
 {
-    if(vStep.empty())
+    if(m_vStep.empty())
         return;
     //当游戏结束时悔棋,应把游戏状态置为未结束
-    if(gameOver == true)
-        gameOver = false;
-    Step *stepTmp = vStep.back();
+    if(m_gameOver == true)
+        m_gameOver = false;
+    Step *stepTmp = m_vStep.back();
 
     moveChessMan(*stepTmp,0);	//走回去
-    alternate = chessMan[stepTmp->fromId].camp;
-    vStep.pop_back();    		//删除这一步的记录信息
+    m_alternate = m_chessMan[stepTmp->fromId].camp;
+    m_vStep.pop_back();    		//删除这一步的记录信息
 
     delete stepTmp;				//删除这一步
     update();
@@ -248,18 +248,18 @@ void Board::slotShowBlackVictory()
 
 void Board::slotRedXian()
 {
-    xianCamp = red;
-    playerCamp = red;
-    initImage(playerCamp,2);
+    m_xianCamp = red;
+    m_playerCamp = red;
+    initImage(m_playerCamp,2);
     restart();
     update();
 }
 
 void Board::slotBlackXian()
 {
-    xianCamp = black;
-    playerCamp = black;
-    initImage(playerCamp,2);
+    m_xianCamp = black;
+    m_playerCamp = black;
+    initImage(m_playerCamp,2);
     restart();
     update();
 }
@@ -280,12 +280,12 @@ Step *Board::generateStep(int selectedChessMan, int row, int col)
 {
     Step *step;
     step = new Step;
-    step->fromRow = chessMan[selectedChessMan].row;
-    step->fromCol = chessMan[selectedChessMan].col;
+    step->fromRow = m_chessMan[selectedChessMan].row;
+    step->fromCol = m_chessMan[selectedChessMan].col;
     step->fromId = selectedChessMan;
     step->toRow = row;
     step->toCol = col;
-    step->toId = board[row][col];
+    step->toId = m_board[row][col];
     return step;
 }
 
@@ -293,14 +293,14 @@ Step *Board::generateStep(int selectedChessMan, int row, int col)
 void Board::alternateNextPlayer()
 {
     //让另一方走
-    if(alternate == black)
+    if(m_alternate == black)
     {
-        alternate = red;
+        m_alternate = red;
         emit changeState("当前状态 : 红方下");
     }
     else
     {
-        alternate = black;
+        m_alternate = black;
         emit changeState("当前状态 : 黑方下");
     }
 }
@@ -312,19 +312,19 @@ bool Board::playerClick(int row, int col)
     if(!judgeRow(row,col))
         return false;
     //点击的位置有棋子
-    if(board[row][col] != -1)
+    if(m_board[row][col] != -1)
     {
-        if(alternate == chessMan[board[row][col]].camp)
+        if(m_alternate == m_chessMan[m_board[row][col]].camp)
         {
             //未选择棋子则选中棋子
-            if(selectedChessMan == -1)
+            if(m_selectedChessMan == -1)
             {
-                selectedChessMan = board[row][col];
+                m_selectedChessMan = m_board[row][col];
             }
             else		//此时应该换选择
             {
                 //是同一阵营的棋子时要换选择
-                selectedChessMan = board[row][col];
+                m_selectedChessMan = m_board[row][col];
             }
             //换选择后要刷新
             update();
@@ -332,23 +332,23 @@ bool Board::playerClick(int row, int col)
         else
         {
             //如果已选择本阵营的棋子,再选择其他阵营的棋子时,表示要吃子
-            if(selectedChessMan != -1)
+            if(m_selectedChessMan != -1)
             {
                 //生成走步
-                step = generateStep(selectedChessMan,row,col);
+                m_step = generateStep(m_selectedChessMan,row,col);
                 //判断走步是否合法
-                if(checkStep(step) == false)
+                if(checkStep(m_step) == false)
                 {
-                    delete step;
-                    step = NULL;
+                    delete m_step;
+                    m_step = NULL;
                     return false;
                 }
-                moveChessMan(*step);
-                finallyMoveChessMan = selectedChessMan;
+                moveChessMan(*m_step);
+                m_finallyMoveChessMan = m_selectedChessMan;
                 //重置为未选择棋子的状态
-                selectedChessMan = -1;
-                recordStep(step);
-                step = NULL;
+                m_selectedChessMan = -1;
+                recordStep(m_step);
+                m_step = NULL;
                 //让另一方走
                 alternateNextPlayer();
                 return true;
@@ -358,23 +358,23 @@ bool Board::playerClick(int row, int col)
     else		//走空地方
     {
         //如果之前已选择棋子,则应走棋
-        if(selectedChessMan != -1)
+        if(m_selectedChessMan != -1)
         {
             //生成走步
-            step = generateStep(selectedChessMan,row,col);
+            m_step = generateStep(m_selectedChessMan,row,col);
             //判断走步是否合法
-            if(checkStep(step) == false)
+            if(checkStep(m_step) == false)
             {
-                delete step;
-                step = NULL;
+                delete m_step;
+                m_step = NULL;
                 return false;
             }
-            moveChessMan(*step);
-            finallyMoveChessMan = selectedChessMan;
+            moveChessMan(*m_step);
+            m_finallyMoveChessMan = m_selectedChessMan;
             //重置为未选择棋子的状态
-            selectedChessMan = -1;
-            recordStep(step);
-            step = NULL;
+            m_selectedChessMan = -1;
+            recordStep(m_step);
+            m_step = NULL;
             //让另一方走
             alternateNextPlayer();
 
@@ -388,13 +388,13 @@ bool Board::playerClick(int row, int col)
 bool Board::whetherTheGameIsOver(Camp &winner)
 {
     //黑方的将出局
-    if(chessMan[4].state == died)
+    if(m_chessMan[4].state == died)
     {
         winner = red;
         return true;
     }
     //红方的将出局
-    if(chessMan[20].state == died)
+    if(m_chessMan[20].state == died)
     {
         winner = black;
         return true;
@@ -409,7 +409,7 @@ bool Board::checkStep(const Step *step)
     if(step->fromId == step->toId)
         return false;
 
-    switch(chessMan[step->fromId].type)
+    switch(m_chessMan[step->fromId].type)
     {
     case redJu:
         return checkStepJu(step);
@@ -461,7 +461,7 @@ int Board::countChessMan(const Step *step)
         }
         for(min++ ; min<max ; ++min)
         {
-            if(board[step->fromRow][min] != -1)
+            if(m_board[step->fromRow][min] != -1)
                 ++sum;
         }
     }
@@ -481,7 +481,7 @@ int Board::countChessMan(const Step *step)
             }
             for(min++ ; min<max ; ++min)
             {
-                if(board[min][step->fromCol] != -1)
+                if(m_board[min][step->fromCol] != -1)
                     ++sum;
             }
         }
@@ -500,18 +500,18 @@ void Board::paintChessMan(QPainter &painter, QPixmap &pixmap)
     //按棋子信息画棋子
     for(int i=0 ; i<32 ; ++i)
     {
-       if(chessMan[i].state == died)
+       if(m_chessMan[i].state == died)
            continue;
-       QPoint point(100*chessMan[i].col + dr , 100*chessMan[i].row + dr);
+       QPoint point(100*m_chessMan[i].col + m_dr , 100*m_chessMan[i].row + m_dr);
        //注意顺序,应先画蓝框,再画红框,否则当选择时可能蓝框覆盖红框,(悔棋时可能出现)
        //如果当前棋子时走的最后一颗棋子,则画一个蓝色的方框,
-       if(finallyMoveChessMan == i)
-           painter.drawImage(point,imageFinallyMove.scaled(scaleSize));
+       if(m_finallyMoveChessMan == i)
+           painter.drawImage(point,m_imageFinallyMove.scaled(m_scaleSize));
        //如果当前棋子是选中的棋子,则画一个红色的方框
-       if(selectedChessMan == i)
-           painter.drawImage(point,imageSelectedBorder.scaled(scaleSize));
+       if(m_selectedChessMan == i)
+           painter.drawImage(point,m_imageSelectedBorder.scaled(m_scaleSize));
        //画棋子
-       painter.drawImage(point,images[chessMan[i].type].scaled(scaleSize));
+       painter.drawImage(point,m_images[m_chessMan[i].type].scaled(m_scaleSize));
     }
 #if 0
     //按棋盘信息画棋子
@@ -557,7 +557,7 @@ bool Board::checkStepMa(const Step *step)
         //马腿位置
         int x = step->fromRow;
         int y = (step->fromCol + step->toCol)/2;
-        if(board[x][y] != -1)
+        if(m_board[x][y] != -1)
             return false;
     }
     else
@@ -566,7 +566,7 @@ bool Board::checkStepMa(const Step *step)
         {
             int x = (step->fromRow + step->toRow)/2;
             int y = step->fromCol;
-            if(board[x][y] != -1)
+            if(m_board[x][y] != -1)
                 return false;
         }
         else
@@ -603,7 +603,7 @@ bool Board::checkRedXiang(const Step *step)
         return false;
     int x = (step->fromRow + step->toRow)/2;
     int y = (step->fromCol + step->toCol)/2;
-    if(board[x][y] != -1)
+    if(m_board[x][y] != -1)
         return false;
     return true;
 }
@@ -635,7 +635,7 @@ bool Board::checkRedJiang(const Step *step)
             return false;
     }
         //判断是否将帅见面
-    if(blackJiang ==chessMan[step->toId].type)
+    if(blackJiang ==m_chessMan[step->toId].type)
     {
         if(step->fromCol == step->toCol)
         {
@@ -683,7 +683,7 @@ bool Board::checkBlackXiang(const Step *step)
         return false;
     int x = (step->fromRow + step->toRow)/2;
     int y = (step->fromCol + step->toCol)/2;
-    if(board[x][y] != -1)
+    if(m_board[x][y] != -1)
         return false;
     return true;
 }
@@ -714,7 +714,7 @@ bool Board::checkBlackJiang(const Step *step)
             return false;
     }
         //判断是否将帅见面
-    if(redJiang ==chessMan[step->toId].type)
+    if(redJiang ==m_chessMan[step->toId].type)
     {
         if(step->fromCol == step->toCol)
         {
@@ -765,8 +765,8 @@ void Board::saveGame(const QString fileName)
 //    out<<i1<<i2<<i3<<chessMan[i].row<<chessMan[i].col;
     for(i=0 ; i<32 ; ++i)
     {
-        out<<chessMan[i].camp<<chessMan[i].state
-          <<chessMan[i].type<<chessMan[i].row<<chessMan[i].col;
+        out<<m_chessMan[i].camp<<m_chessMan[i].state
+          <<m_chessMan[i].type<<m_chessMan[i].row<<m_chessMan[i].col;
     }
     //保存棋盘信息
     int j;
@@ -774,13 +774,13 @@ void Board::saveGame(const QString fileName)
     {
         for(j=0 ; j<9 ; ++j)
         {
-            out<<board[i][j];
+            out<<m_board[i][j];
         }
     }
     //保存棋盘布局（用户的阵营）信息
-    out<<playerCamp;
+    out<<m_playerCamp;
     //保存谁先行信息
-    out<<alternate;
+    out<<m_alternate;
 
     file.close();
     QMessageBox::information(this,"保存","保存成功",
@@ -790,14 +790,14 @@ void Board::saveGame(const QString fileName)
 void Board::openGame(const QString fileName)
 {
     //把悔棋信息数组清空
-    for(auto item : vStep)
+    for(auto item : m_vStep)
     {
         delete item;
     }
-    vStep.clear();
+    m_vStep.clear();
 
     //设置为没有最后走的棋子
-    finallyMoveChessMan = -1;
+    m_finallyMoveChessMan = -1;
 
     QFile file(fileName);
     file.open(QIODevice::ReadWrite);
@@ -807,10 +807,10 @@ void Board::openGame(const QString fileName)
     int i1,i2,i3;
     for(i=0 ; i<32 ; ++i)
     {
-        in>>i1>>i2>>i3>>chessMan[i].row>>chessMan[i].col;
-        chessMan[i].camp = (Camp)i1;
-        chessMan[i].state = (State)i2;
-        chessMan[i].type = (Type)i3;
+        in>>i1>>i2>>i3>>m_chessMan[i].row>>m_chessMan[i].col;
+        m_chessMan[i].camp = (Camp)i1;
+        m_chessMan[i].state = (State)i2;
+        m_chessMan[i].type = (Type)i3;
     }
     //读取棋盘信息
     int j;
@@ -818,24 +818,24 @@ void Board::openGame(const QString fileName)
     {
         for(j=0 ; j<9 ; ++j)
         {
-            in>>board[i][j];
+            in>>m_board[i][j];
         }
     }
     //读取棋盘布局信息
     in>>i1;
-    playerCamp = (Camp)i1;
+    m_playerCamp = (Camp)i1;
     //读取谁先行信息
     in>>i1;
-    alternate = (Camp)i1;
-    gameOver = false;
+    m_alternate = (Camp)i1;
+    m_gameOver = false;
     file.close();
     update();
 }
 
 void Board::slotStart()
 {
-    gameOver = false;
-    if(alternate == black)
+    m_gameOver = false;
+    if(m_alternate == black)
     {
         emit changeState("当前状态 : 黑方下");
     }
@@ -853,16 +853,16 @@ void Board::restart()
     //重新设置棋子和棋盘位置
     initChess();
     //重新设置游戏结束标志
-    gameOver = false;
+    m_gameOver = false;
     //销毁vStep里所有的走步
-    for(Step* item : vStep)
+    for(Step* item : m_vStep)
         delete item;
     //清空悔棋信息数组
-    vStep.clear();
+    m_vStep.clear();
     //设置谁先走
-    alternate  = xianCamp;
+    m_alternate  = m_xianCamp;
     //设置为没有最后移动的棋子
-    finallyMoveChessMan = -1;
+    m_finallyMoveChessMan = -1;
     update();
 }
 
@@ -875,39 +875,39 @@ void Board::initChess()
     //初始化棋子
 
     //黑方的棋子
-    chessMan[0] = {0,0,blackJu,black,alive};
-    chessMan[1] = {0,1,blackMa,black,alive};
-    chessMan[2] = {0,2,blackXiang,black,alive};
-    chessMan[3] = {0,3,blackShi,black,alive};
-    chessMan[4] = {0,4,blackJiang,black,alive};
-    chessMan[5] = {0,5,blackShi,black,alive};
-    chessMan[6] = {0,6,blackXiang,black,alive};
-    chessMan[7] = {0,7,blackMa,black,alive};
-    chessMan[8] = {0,8,blackJu,black,alive};
-    chessMan[9] = {2,1,blackPao,black,alive};
-    chessMan[10] = {2,7,blackPao,black,alive};
-    chessMan[11] = {3,0,blackZu,black,alive};
-    chessMan[12] = {3,2,blackZu,black,alive};
-    chessMan[13] = {3,4,blackZu,black,alive};
-    chessMan[14] = {3,6,blackZu,black,alive};
-    chessMan[15] = {3,8,blackZu,black,alive};
+    m_chessMan[0] = {0,0,blackJu,black,alive};
+    m_chessMan[1] = {0,1,blackMa,black,alive};
+    m_chessMan[2] = {0,2,blackXiang,black,alive};
+    m_chessMan[3] = {0,3,blackShi,black,alive};
+    m_chessMan[4] = {0,4,blackJiang,black,alive};
+    m_chessMan[5] = {0,5,blackShi,black,alive};
+    m_chessMan[6] = {0,6,blackXiang,black,alive};
+    m_chessMan[7] = {0,7,blackMa,black,alive};
+    m_chessMan[8] = {0,8,blackJu,black,alive};
+    m_chessMan[9] = {2,1,blackPao,black,alive};
+    m_chessMan[10] = {2,7,blackPao,black,alive};
+    m_chessMan[11] = {3,0,blackZu,black,alive};
+    m_chessMan[12] = {3,2,blackZu,black,alive};
+    m_chessMan[13] = {3,4,blackZu,black,alive};
+    m_chessMan[14] = {3,6,blackZu,black,alive};
+    m_chessMan[15] = {3,8,blackZu,black,alive};
     //红方的棋子(在数组中的位置(9-row,8-col)
-    chessMan[16] = {9,8,redJu,red,alive};
-    chessMan[17] = {9,7,redMa,red,alive};
-    chessMan[18] = {9,6,redXiang,red,alive};
-    chessMan[19] = {9,5,redShi,red,alive};
-    chessMan[20] = {9,4,redJiang,red,alive};
-    chessMan[21] = {9,3,redShi,red,alive};
-    chessMan[22] = {9,2,redXiang,red,alive};
-    chessMan[23] = {9,1,redMa,red,alive};
-    chessMan[24] = {9,0,redJu,red,alive};
-    chessMan[25] = {7,7,redPao,red,alive};
-    chessMan[26] = {7,1,redPao,red,alive};
-    chessMan[27] = {6,8,redZu,red,alive};
-    chessMan[28] = {6,6,redZu,red,alive};
-    chessMan[29] = {6,4,redZu,red,alive};
-    chessMan[30] = {6,2,redZu,red,alive};
-    chessMan[31] = {6,0,redZu,red,alive};
+    m_chessMan[16] = {9,8,redJu,red,alive};
+    m_chessMan[17] = {9,7,redMa,red,alive};
+    m_chessMan[18] = {9,6,redXiang,red,alive};
+    m_chessMan[19] = {9,5,redShi,red,alive};
+    m_chessMan[20] = {9,4,redJiang,red,alive};
+    m_chessMan[21] = {9,3,redShi,red,alive};
+    m_chessMan[22] = {9,2,redXiang,red,alive};
+    m_chessMan[23] = {9,1,redMa,red,alive};
+    m_chessMan[24] = {9,0,redJu,red,alive};
+    m_chessMan[25] = {7,7,redPao,red,alive};
+    m_chessMan[26] = {7,1,redPao,red,alive};
+    m_chessMan[27] = {6,8,redZu,red,alive};
+    m_chessMan[28] = {6,6,redZu,red,alive};
+    m_chessMan[29] = {6,4,redZu,red,alive};
+    m_chessMan[30] = {6,2,redZu,red,alive};
+    m_chessMan[31] = {6,0,redZu,red,alive};
 
     //初始化棋盘状态
     //首先初始化为空
@@ -915,13 +915,13 @@ void Board::initChess()
     {
         for(j=0 ; j<10 ; ++j)
         {
-            board[i][j] = -1;
+            m_board[i][j] = -1;
         }
     }
     //放棋子
     for(i = 0 ; i<32 ; ++i)
     {
-        board[chessMan[i].row][chessMan[i].col] = i;
+        m_board[m_chessMan[i].row][m_chessMan[i].col] = i;
     }
 }
 //初始化棋子图片
@@ -929,73 +929,73 @@ void Board::initImage( Camp camp,int kind)
 {
     if(kind == 1)       //加载第一种棋子
     {
-        images[0].load(":/chessman/images/chessman1/redJu.png");
-        images[1].load(":/chessman/images/chessman1/redMa.png");
-        images[2].load(":/chessman/images/chessman1/redXiang.png");
-        images[3].load(":/chessman/images/chessman1/redShi.png");
-        images[4].load(":/chessman/images/chessman1/redJiang.png");
-        images[5].load(":/chessman/images/chessman1/redPao.png");
-        images[6].load(":/chessman/images/chessman1/redZu.png");
+        m_images[0].load(":/chessman/images/chessman1/redJu.png");
+        m_images[1].load(":/chessman/images/chessman1/redMa.png");
+        m_images[2].load(":/chessman/images/chessman1/redXiang.png");
+        m_images[3].load(":/chessman/images/chessman1/redShi.png");
+        m_images[4].load(":/chessman/images/chessman1/redJiang.png");
+        m_images[5].load(":/chessman/images/chessman1/redPao.png");
+        m_images[6].load(":/chessman/images/chessman1/redZu.png");
 
-        images[7].load(":/chessman/images/chessman1/blackJu.png");
-        images[8].load(":/chessman/images/chessman1/blackMa.png");
-        images[9].load(":/chessman/images/chessman1/blackXiang.png");
-        images[10].load(":/chessman/images/chessman1/blackShi.png");
-        images[11].load(":/chessman/images/chessman1/blackJiang.png");
-        images[12].load(":/chessman/images/chessman1/blackPao.png");
-        images[13].load(":/chessman/images/chessman1/blackZu.png");
+        m_images[7].load(":/chessman/images/chessman1/blackJu.png");
+        m_images[8].load(":/chessman/images/chessman1/blackMa.png");
+        m_images[9].load(":/chessman/images/chessman1/blackXiang.png");
+        m_images[10].load(":/chessman/images/chessman1/blackShi.png");
+        m_images[11].load(":/chessman/images/chessman1/blackJiang.png");
+        m_images[12].load(":/chessman/images/chessman1/blackPao.png");
+        m_images[13].load(":/chessman/images/chessman1/blackZu.png");
 
-        scaleSize = QSize(100,100);
-        dr = 50;
+        m_scaleSize = QSize(100,100);
+        m_dr = 50;
     }
     else
     {
         if(kind == 2)   //加载第二种棋子
         {
-            images[0].load(":/chessman/images/chessman2/redJu.png");
-            images[1].load(":/chessman/images/chessman2/redMa.png");
-            images[2].load(":/chessman/images/chessman2/redXiang.png");
-            images[3].load(":/chessman/images/chessman2/redShi.png");
-            images[4].load(":/chessman/images/chessman2/redShuai.png");
-            images[5].load(":/chessman/images/chessman2/redPao.png");
-            images[6].load(":/chessman/images/chessman2/redZu.png");
+            m_images[0].load(":/chessman/images/chessman2/redJu.png");
+            m_images[1].load(":/chessman/images/chessman2/redMa.png");
+            m_images[2].load(":/chessman/images/chessman2/redXiang.png");
+            m_images[3].load(":/chessman/images/chessman2/redShi.png");
+            m_images[4].load(":/chessman/images/chessman2/redShuai.png");
+            m_images[5].load(":/chessman/images/chessman2/redPao.png");
+            m_images[6].load(":/chessman/images/chessman2/redZu.png");
 
-            images[7].load(":/chessman/images/chessman2/blackJu.png");
-            images[8].load(":/chessman/images/chessman2/blackMa.png");
-            images[9].load(":/chessman/images/chessman2/blackXiang.png");
-            images[10].load(":/chessman/images/chessman2/blackShi.png");
-            images[11].load(":/chessman/images/chessman2/blackJiang.png");
-            images[12].load(":/chessman/images/chessman2/blackPao.png");
-            images[13].load(":/chessman/images/chessman2/blackZu.png");
+            m_images[7].load(":/chessman/images/chessman2/blackJu.png");
+            m_images[8].load(":/chessman/images/chessman2/blackMa.png");
+            m_images[9].load(":/chessman/images/chessman2/blackXiang.png");
+            m_images[10].load(":/chessman/images/chessman2/blackShi.png");
+            m_images[11].load(":/chessman/images/chessman2/blackJiang.png");
+            m_images[12].load(":/chessman/images/chessman2/blackPao.png");
+            m_images[13].load(":/chessman/images/chessman2/blackZu.png");
             //记录对应的缩放尺寸
-            scaleSize = QSize(90,90);
+            m_scaleSize = QSize(90,90);
             //记录棋子偏移量
-            dr = 55;
+            m_dr = 55;
         }
         else            //加载第三种棋子
         {
-            images[0].load(":/chessman/images/chessman/redJu.png");
-            images[1].load(":/chessman/images/chessman/redMa.png");
-            images[2].load(":/chessman/images/chessman/redXiang.png");
-            images[3].load(":/chessman/images/chessman/redShi.png");
-            images[4].load(":/chessman/images/chessman/redShuai.png");
-            images[5].load(":/chessman/images/chessman/redPao.png");
-            images[6].load(":/chessman/images/chessman/redBing.png");
+            m_images[0].load(":/chessman/images/chessman/redJu.png");
+            m_images[1].load(":/chessman/images/chessman/redMa.png");
+            m_images[2].load(":/chessman/images/chessman/redXiang.png");
+            m_images[3].load(":/chessman/images/chessman/redShi.png");
+            m_images[4].load(":/chessman/images/chessman/redShuai.png");
+            m_images[5].load(":/chessman/images/chessman/redPao.png");
+            m_images[6].load(":/chessman/images/chessman/redBing.png");
 
-            images[7].load(":/chessman/images/chessman/blackJu.png");
-            images[8].load(":/chessman/images/chessman/blackMa.png");
-            images[9].load(":/chessman/images/chessman/blackXiang.png");
-            images[10].load(":/chessman/images/chessman/blackShi.png");
-            images[11].load(":/chessman/images/chessman/blackJiang.png");
-            images[12].load(":/chessman/images/chessman/blackPao.png");
-            images[13].load(":/chessman/images/chessman/blackZu.png");
+            m_images[7].load(":/chessman/images/chessman/blackJu.png");
+            m_images[8].load(":/chessman/images/chessman/blackMa.png");
+            m_images[9].load(":/chessman/images/chessman/blackXiang.png");
+            m_images[10].load(":/chessman/images/chessman/blackShi.png");
+            m_images[11].load(":/chessman/images/chessman/blackJiang.png");
+            m_images[12].load(":/chessman/images/chessman/blackPao.png");
+            m_images[13].load(":/chessman/images/chessman/blackZu.png");
 
-            scaleSize = QSize(90,90);
-            dr = 55;
+            m_scaleSize = QSize(90,90);
+            m_dr = 55;
         }
     }
-    imageSelectedBorder.load(":/board/redBorder");   //选择棋子时显示的红色边框
-    imageFinallyMove.load(":/board/blueBorder");       //移动完棋子时显示的蓝色边框,提示这是最后移动的棋子
+    m_imageSelectedBorder.load(":/board/redBorder");   //选择棋子时显示的红色边框
+    m_imageFinallyMove.load(":/board/blueBorder");       //移动完棋子时显示的蓝色边框,提示这是最后移动的棋子
     //黑方在棋盘下方时翻转棋子
     if(camp == black)
     {
@@ -1005,7 +1005,7 @@ void Board::initImage( Camp camp,int kind)
         for(int i=0 ; i<15 ; ++i)
         {
             //逐个倒转棋子
-            images[i] = images[i].transformed(matrix);
+            m_images[i] = m_images[i].transformed(matrix);
         }
     }
 }

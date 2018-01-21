@@ -38,32 +38,32 @@ private:
  //   void init
 private:
 
-    selectDialog *selectMode;         //选择对话框
-    ControlPanel *panel;
-    QDockWidget *dockWidget;
-    Board *board;
-    QLabel *labelMode;          //显示当前模式,执红执黑等信息
-    QLabel *labelXia;           //该哪方下了
+    selectDialog *m_selectMode;         //选择对话框
+    ControlPanel *m_panel;
+    QDockWidget *m_dockWidget;
+    Board *m_board;
+    QLabel *m_labelMode;          //显示当前模式,执红执黑等信息
+    QLabel *m_labelXia;           //该哪方下了
 
 
-    QMenu *menuFile ;           //文件菜单
-    QMenu *menuVier;            //视图菜单
-    QMenu *menuOperator;        //操作菜单
-    QMenu *menuHelp;            //帮助菜单
-    QAction * actSets;          //打开设置对话框
-    QAction *actCtrlPanel;      //打开控制面板
-    QAction *actSave ;          //保存棋局
-    QAction *actOpen;           //打开保存过的棋局
-    QAction *actUndoStep;		//悔棋
-    QAction *actStart;			//开始
-    QAction *actRestart;		//重新开始
-    QAction *actMagnify;		//棋盘放大
-    QAction *actShrink;			//棋盘缩小
-    QAction *actAdapt;			//棋盘适应窗口
-    QAction *actGameRule;		//游戏规则
-    QAction *actInstructions;	//软件使用说明
-    QAction *actSelectMode;     //选择模式
-    QAction *actQuit;			//退出
+    QMenu *m_menuFile ;           //文件菜单
+    QMenu *m_menuVier;            //视图菜单
+    QMenu *m_menuOperator;        //操作菜单
+    QMenu *m_menuHelp;            //帮助菜单
+    QAction * m_actSets;          //打开设置对话框
+    QAction *m_actCtrlPanel;      //打开控制面板
+    QAction *m_actSave ;          //保存棋局
+    QAction *m_actOpen;           //打开保存过的棋局
+    QAction *m_actUndoStep;		//悔棋
+    QAction *m_actStart;			//开始
+    QAction *m_actRestart;		//重新开始
+    QAction *m_actMagnify;		//棋盘放大
+    QAction *m_actShrink;			//棋盘缩小
+    QAction *m_actAdapt;			//棋盘适应窗口
+    QAction *m_actGameRule;		//游戏规则
+    QAction *m_actInstructions;	//软件使用说明
+    QAction *m_actSelectMode;     //选择模式
+    QAction *m_actQuit;			//退出
 
     //重新连接信号和槽,并设置中心部件
     void setBoard();
