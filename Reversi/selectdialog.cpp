@@ -8,7 +8,7 @@
 selectDialog ::selectDialog (QWidget *parent, Qt::WindowFlags f)
     : QDialog(parent, f)
 {
-    m_socket = new stacked;
+    m_stack = new stacked;
     m_btn1 = new QPushButton("one");
 
     //设置按钮图片,无动作时,鼠标移动到其上时,点击时
@@ -45,7 +45,7 @@ selectDialog ::selectDialog (QWidget *parent, Qt::WindowFlags f)
     hlay2->addStretch(1);
 
     vLay->addLayout(hlay2);
-    vLay->addWidget(m_socket,3);
+    vLay->addWidget(m_stack,3);
     vLay->addLayout(hLay,1);
     //填充背景图片
     m_image.load(":/new/prefix1/22.jpg");
@@ -72,29 +72,29 @@ void selectDialog::resizeEvent(QResizeEvent *event)
 
 void selectDialog::slot_select()
 {
-   if((m_socket->m_leftlist->currentRow()) == 0)
+   if((m_stack->m_leftlist->currentRow()) == 0)
    {
          mytest *m = new mytest;
          m->show();
    }
    else
    {
-       if(m_socket->m_leftlist->currentRow() == 1)
+       if(m_stack->m_leftlist->currentRow() == 1)
        {
             bool ahead;
             int level;
             //ahead为false时是执黑,level为难度
-            m_socket->m_aiPage->setting(ahead,level);
+            m_stack->m_aiPage->setting(ahead,level);
             AiMode *ai = new AiMode(ahead,level);
             ai->show();
        }
        else
        {
-           if(m_socket->m_leftlist->currentRow() == 2)
+           if(m_stack->m_leftlist->currentRow() == 2)
            {
                 bool isServer;
                 bool color;
-                m_socket->m_netPage->setting(isServer,color);
+                m_stack->m_netPage->setting(isServer,color);
                 NetMode * net = new NetMode(isServer,color);
                 net->show();
            }

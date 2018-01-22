@@ -19,7 +19,7 @@ public:
 protected:
     void resizeEvent(QResizeEvent *event);
 private:
-    stacked *m_socket;
+    stacked *m_stack;
     QImage m_image;          //加载背景图片
     QPushButton *m_btn1;
     QPushButton *m_btn2;
