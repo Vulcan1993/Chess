@@ -70,11 +70,11 @@ private:
 
 public slots:
  //   void slotAiMode();
-    void slotSelect();
-    void slotSetState(const QString str);
-    void slotSetMode(const QString str);
-    void slotCtrlPanel();
-    void slotShowHelp();
+    void slot_select();
+    void slot_setState(const QString str);
+    void slot_setMode(const QString str);
+    void slot_ctrlPanel();
+    void slot_showHelp();
 };
 
 #endif // MAINWINDOW_H

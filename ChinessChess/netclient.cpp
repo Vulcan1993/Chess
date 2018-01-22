@@ -4,11 +4,11 @@ NetClient::NetClient(Camp xian,Camp playerCamp, QWidget *parent)
     :Board(xian,playerCamp,parent)
 {
 
-    QTimer::singleShot(100,this,SLOT(slotInitialize()));
+    QTimer::singleShot(100,this,SLOT(slot_initialize()));
     //创建套接字
     socket = new QTcpSocket(this);
     connect(socket,SIGNAL(readyRead()),
-            this,SLOT(slotReadyRead()));
+            this,SLOT(slot_readyRead()));
 
 }
 
@@ -54,11 +54,11 @@ void NetClient::mouseClick(int row, int col)
             m_gameOver = true;
             if(winner == red)
             {
-                QTimer::singleShot(300,this,SLOT(slotShowRedVictory()));
+                QTimer::singleShot(300,this,SLOT(slot_showRedVictory()));
             }
             else
             {
-                QTimer::singleShot(300,this,SLOT(slotShowBlackVictory()));
+                QTimer::singleShot(300,this,SLOT(slot_showBlackVictory()));
             }
         }
         update();
@@ -67,7 +67,7 @@ void NetClient::mouseClick(int row, int col)
 
 
 
-void NetClient::slotTryConnect( Camp player,Camp xian)
+void NetClient::slot_tryConnect( Camp player,Camp xian)
 {  
     //连接服务器,
     socket->connectToHost("127.0.0.1",9988);
@@ -107,7 +107,7 @@ void NetClient::slotTryConnect( Camp player,Camp xian)
 //  7 , 重新开始申请结果 7 1 同意 7 2 不同意
 
 
-void NetClient::slotReadyRead()
+void NetClient::slot_readyRead()
 {
     //还有数据时继续读取
     while(socket->bytesAvailable()>0)
@@ -130,7 +130,7 @@ void NetClient::slotReadyRead()
                     m_xianCamp = red;
                     m_playerCamp = red;
                     initImage(m_playerCamp,2);
-                    Board::restart();
+                    Board::slot_restart();
 
 
                     //"默认模式 : 人人对战 , 执红 , 红方先行  "
@@ -143,7 +143,7 @@ void NetClient::slotReadyRead()
                         str += "红方先行  ";
                     else
                         str +="黑方先行";
-                    emit changeMode(str);
+                    emit signal_changeMode(str);
 
                     update();
                 }
@@ -153,7 +153,7 @@ void NetClient::slotReadyRead()
                     m_xianCamp = black;
                     m_playerCamp = red;
                     initImage(m_playerCamp,2);
-                    Board::restart();
+                    Board::slot_restart();
 
 
                     //"默认模式 : 人人对战 , 执红 , 红方先行  "
@@ -166,7 +166,7 @@ void NetClient::slotReadyRead()
                         str += "红方先行  ";
                     else
                         str +="黑方先行";
-                    emit changeMode(str);
+                    emit signal_changeMode(str);
                     update();
                 }
                 break;
@@ -177,7 +177,7 @@ void NetClient::slotReadyRead()
                     m_xianCamp = red;
                     m_playerCamp = black;
                     initImage(m_playerCamp,2);
-                    Board::restart();
+                    Board::slot_restart();
 
                     //"默认模式 : 人人对战 , 执红 , 红方先行  "
                     QString str = "当前模式 : 网络对战 , ";
@@ -189,7 +189,7 @@ void NetClient::slotReadyRead()
                         str += "红方先行  ";
                     else
                         str +="黑方先行";
-                    emit changeMode(str);
+                    emit signal_changeMode(str);
 
                     update();
                 }
@@ -199,7 +199,7 @@ void NetClient::slotReadyRead()
                     m_xianCamp = red;
                     m_playerCamp = black;
                     initImage(m_playerCamp,2);
-                    Board::restart();
+                    Board::slot_restart();
                     //"默认模式 : 人人对战 , 执红 , 红方先行  "
                     QString str = "当前模式 : 网络对战 , ";
                     if(m_playerCamp == red)
@@ -210,16 +210,16 @@ void NetClient::slotReadyRead()
                         str += "红方先行  ";
                     else
                         str +="黑方先行";
-                    emit changeMode(str);
+                    emit signal_changeMode(str);
                     update();
                 }
                 break;
             }
             m_gameOver = false;
             if(m_alternate == red)
-                emit changeState("当前状态 : 红方下");
+                emit signal_changeState("当前状态 : 红方下");
             else
-                emit changeState("当前状态 : 黑方下");
+                emit signal_changeState("当前状态 : 黑方下");
 
     //        QTimer::singleShot(100,this,SLOT(slotSetMode()));
             break;
@@ -236,7 +236,7 @@ void NetClient::slotReadyRead()
                                   QMessageBox::Yes|QMessageBox::No,
                                   QMessageBox::Yes))
             {
-                Board::undoStep();
+                Board::slot_undoStep();
                 QByteArray buf1;
                 buf1.append(4);
                 buf1.append(1);         //同意
@@ -263,7 +263,7 @@ void NetClient::slotReadyRead()
                 }
                 else
                 {
-                    Board::undoStep();
+                    Board::slot_undoStep();
                 }
             break;
         case 5:
@@ -271,9 +271,9 @@ void NetClient::slotReadyRead()
                                      QMessageBox::Ok);
             m_gameOver = false;
             if(m_alternate == red)
-                emit changeState("当前状态 : 红方下");
+                emit signal_changeState("当前状态 : 红方下");
             else
-                emit changeState("当前状态 : 黑方下");
+                emit signal_changeState("当前状态 : 黑方下");
 
 
             break;
@@ -283,7 +283,7 @@ void NetClient::slotReadyRead()
                                   QMessageBox::Yes|QMessageBox::No,
                                   QMessageBox::Yes))
             {           //通知对方
-                Board::restart();       //调用父类函数重新开始
+                Board::slot_restart();       //调用父类函数重新开始
                 QByteArray buf;
                 buf.append(7);
                 buf.append(1);
@@ -302,7 +302,7 @@ void NetClient::slotReadyRead()
         case 7:
             if(buf.at(1) == 1)      //同意重新开始
             {
-                Board::restart();
+                Board::slot_restart();
             }
             else                    //不同意重新开始
             {
@@ -313,12 +313,12 @@ void NetClient::slotReadyRead()
         }
     }
 }
-void NetClient::slotDeconnect()
+void NetClient::slot_deconnect()
 {
     socket->close();
 }
 
-void NetClient::slotWriteConnect()
+void NetClient::slot_writeConnect()
 {
 #if 0
   //发送设置信息
@@ -341,7 +341,7 @@ void NetClient::slotWriteConnect()
     socket->write(buf);
 }
 
-void NetClient::undoStep()
+void NetClient::slot_undoStep()
 {
     //申请悔棋
     QByteArray buf;
@@ -349,14 +349,14 @@ void NetClient::undoStep()
     socket->write(buf);
 }
 //重新开始申请
-void NetClient::restart()
+void NetClient::slot_restart()
 {
     QByteArray buf;
     buf.append(6);
     socket->write(buf);
 }
 
-void NetClient::slotSetMode()
+void NetClient::slot_setMode()
 {
     //"默认模式 : 人人对战 , 执红 , 红方先行  "
     QString str = "当前模式 : 网络对战 , ";
@@ -368,7 +368,7 @@ void NetClient::slotSetMode()
         str += "红方先行  ";
     else
         str +="黑方先行";
-    emit changeMode(str);
+    emit signal_changeMode(str);
 }
 
 //void NetClient::slotInitialize()

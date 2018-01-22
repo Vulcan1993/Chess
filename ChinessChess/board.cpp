@@ -16,7 +16,7 @@ Board::Board(Camp xian, Camp playerCamp, QWidget *parent)
 
     //等50毫秒再发送信号,因为此时信号和槽还未连接,如果程序在50毫秒内没有连接
     //则不会显示显示这条消息
-    QTimer::singleShot(50,this,SLOT(slotInitialize()));
+    QTimer::singleShot(50,this,SLOT(slot_initialize()));
 #if 0
     if(playerCamp == red)
         initImage(true,1);
@@ -115,11 +115,11 @@ void Board::mousePressEvent(QMouseEvent *ev)
                 m_gameOver = true;
                 if(winner == red)
                 {
-                    QTimer::singleShot(300,this,SLOT(slotShowRedVictory()));
+                    QTimer::singleShot(300,this,SLOT(slot_showRedVictory()));
                 }
                 else
                 {
-                    QTimer::singleShot(300,this,SLOT(slotShowBlackVictory()));
+                    QTimer::singleShot(300,this,SLOT(slot_showBlackVictory()));
                 }
             }
             update();
@@ -128,7 +128,7 @@ void Board::mousePressEvent(QMouseEvent *ev)
     }
     else
     {
-        undoStep();
+        slot_undoStep();
     }
 }
 
@@ -213,7 +213,7 @@ void Board::recordStep(Step *step)
 }
 
 //悔棋
-void Board::undoStep()
+void Board::slot_undoStep()
 {
     if(m_vStep.empty())
         return;
@@ -230,43 +230,43 @@ void Board::undoStep()
     update();
 }
 
-void Board::slotShowRedVictory()
+void Board::slot_showRedVictory()
 {
     QMessageBox::information(this,"游戏结束","红方胜!",
                              QMessageBox::Ok,
                              QMessageBox::Ok);
-    emit changeState("当前状态 : 游戏结束 , 红方胜");
+    emit signal_changeState("当前状态 : 游戏结束 , 红方胜");
 }
 
-void Board::slotShowBlackVictory()
+void Board::slot_showBlackVictory()
 {
     QMessageBox::information(this,"游戏结束","黑方胜!",
                              QMessageBox::Ok,
                              QMessageBox::Ok);
-    emit changeState("当前状态 : 游戏结束 , 黑方胜");
+    emit signal_changeState("当前状态 : 游戏结束 , 黑方胜");
 }
 
-void Board::slotRedXian()
+void Board::slot_redXian()
 {
     m_xianCamp = red;
     m_playerCamp = red;
     initImage(m_playerCamp,2);
-    restart();
+    slot_restart();
     update();
 }
 
-void Board::slotBlackXian()
+void Board::slot_blackXian()
 {
     m_xianCamp = black;
     m_playerCamp = black;
     initImage(m_playerCamp,2);
-    restart();
+    slot_restart();
     update();
 }
 
-void Board::slotInitialize()
+void Board::slot_initialize()
 {
-    emit changeState("当前状态 : 未开始 ");
+    emit signal_changeState("当前状态 : 未开始 ");
 }
 
 void Board::toClientRow(int &row, int &col)
@@ -296,12 +296,12 @@ void Board::alternateNextPlayer()
     if(m_alternate == black)
     {
         m_alternate = red;
-        emit changeState("当前状态 : 红方下");
+        emit signal_changeState("当前状态 : 红方下");
     }
     else
     {
         m_alternate = black;
-        emit changeState("当前状态 : 黑方下");
+        emit signal_changeState("当前状态 : 黑方下");
     }
 }
 
@@ -832,23 +832,23 @@ void Board::openGame(const QString fileName)
     update();
 }
 
-void Board::slotStart()
+void Board::slot_start()
 {
     m_gameOver = false;
     if(m_alternate == black)
     {
-        emit changeState("当前状态 : 黑方下");
+        emit signal_changeState("当前状态 : 黑方下");
     }
     else
     {
-        emit changeState("当前状态 : 红方下");
+        emit signal_changeState("当前状态 : 红方下");
     }
     QMessageBox::information(this,"中国象棋","游戏开始",
                              QMessageBox::Ok,QMessageBox::Ok);
 }
 
 
-void Board::restart()
+void Board::slot_restart()
 {
     //重新设置棋子和棋盘位置
     initChess();

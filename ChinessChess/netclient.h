@@ -20,16 +20,16 @@ public:
     void mouseClick(int row, int col);
 
 public slots:
-    void slotTryConnect( Camp player,Camp xian);
-    void slotReadyRead();
-    void slotDeconnect();
-    void slotWriteConnect();
+    void slot_tryConnect( Camp player,Camp xian);
+    void slot_readyRead();
+    void slot_deconnect();
+    void slot_writeConnect();
     //悔棋
-    void undoStep();
+    void slot_undoStep();
     //重新开始
-    void restart();
+    void slot_restart();
 
-    void slotSetMode();
+    void slot_setMode();
 //    void slotInitialize();
 };
 

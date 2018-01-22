@@ -35,9 +35,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_panel->btn6,SIGNAL(clicked(bool)),m_actOpen,SIGNAL(triggered(bool)));
     connect(m_panel->btn7,SIGNAL(clicked(bool)),m_actQuit,SIGNAL(triggered(bool)));
 
-    connect(m_actCtrlPanel,SIGNAL(triggered(bool)),this,SLOT(slotCtrlPanel()));
-    connect(m_actGameRule,SIGNAL(triggered(bool)),this,SLOT(slotShowHelp()));
-    connect(m_actSelectMode,SIGNAL(triggered(bool)),this,SLOT(slotSelect()));
+    connect(m_actCtrlPanel,SIGNAL(triggered(bool)),this,SLOT(slot_ctrlPanel()));
+    connect(m_actGameRule,SIGNAL(triggered(bool)),this,SLOT(slot_showHelp()));
+    connect(m_actSelectMode,SIGNAL(triggered(bool)),this,SLOT(slot_select()));
     connect(m_actQuit,SIGNAL(triggered(bool)),this,SLOT(close()));
 
 
@@ -51,8 +51,8 @@ MainWindow::MainWindow(QWidget *parent)
     //通过信号和槽通信来改变状态栏的显示信息
     connect(m_actSave,SIGNAL(triggered(bool)),m_board,SLOT(slotSave()));
     connect(m_actOpen,SIGNAL(triggered(bool)),m_board,SLOT(slotOpen()));
-    connect(m_board,SIGNAL(changeState(const QString)),this,SLOT(slotSetState(const QString)));
-    connect(m_board,SIGNAL(changeMode(const QString)),this,SLOT(slotSetMode(const QString)));
+    connect(m_board,SIGNAL(changeState(const QString)),this,SLOT(slot_setState(const QString)));
+    connect(m_board,SIGNAL(changeMode(const QString)),this,SLOT(slot_setMode(const QString)));
     connect(m_actStart,SIGNAL(triggered(bool)),m_board,SLOT(slotStart()));
     connect(m_actRestart,SIGNAL(triggered(bool)),m_board,SLOT(restart()));
     connect(m_actUndoStep,SIGNAL(triggered(bool)),m_board,SLOT(undoStep()));
@@ -180,8 +180,8 @@ void MainWindow::setBoard()
     //通过信号和槽通信来改变状态栏的显示信息
     connect(m_actSave,SIGNAL(triggered(bool)),m_board,SLOT(slotSave()));
     connect(m_actOpen,SIGNAL(triggered(bool)),m_board,SLOT(slotOpen()));
-    connect(m_board,SIGNAL(changeState(const QString)),this,SLOT(slotSetState(const QString)));
-    connect(m_board,SIGNAL(changeMode(const QString)),this,SLOT(slotSetMode(const QString)));
+    connect(m_board,SIGNAL(changeState(const QString)),this,SLOT(slot_setState(const QString)));
+    connect(m_board,SIGNAL(changeMode(const QString)),this,SLOT(slot_setMode(const QString)));
     connect(m_actStart,SIGNAL(triggered(bool)),m_board,SLOT(slotStart()));
     connect(m_actRestart,SIGNAL(triggered(bool)),m_board,SLOT(restart()));
     connect(m_actUndoStep,SIGNAL(triggered(bool)),m_board,SLOT(undoStep()));
@@ -213,7 +213,7 @@ void MainWindow::setBoard()
 //AiMode(Camp xian,Camp playerCamp,QWidget *parent=0,int level = 5,);
 
 //选择模式
-void MainWindow::slotSelect()
+void MainWindow::slot_select()
 {
     //
     if(m_selectMode->exec()==QDialog::Accepted)
@@ -298,7 +298,7 @@ void MainWindow::slotSelect()
                     m_labelMode->setText(str);
 
 
-                    static_cast<NetClient*>(m_board)->slotTryConnect(player,xian);
+                    static_cast<NetClient*>(m_board)->slot_tryConnect(player,xian);
 
                 }
             }
@@ -307,23 +307,23 @@ void MainWindow::slotSelect()
     }
 }
 
-void MainWindow::slotSetState(const QString str)
+void MainWindow::slot_setState(const QString str)
 {
     m_labelXia->setText(str);
 }
 
-void MainWindow::slotSetMode(const QString str)
+void MainWindow::slot_setMode(const QString str)
 {
     m_labelMode->setText(str);
 }
 
-void MainWindow::slotCtrlPanel()
+void MainWindow::slot_ctrlPanel()
 {
     //设置锚接部件为可见
     m_dockWidget->setVisible(true);
 }
 
-void MainWindow::slotShowHelp()
+void MainWindow::slot_showHelp()
 {
     Rule *r = new Rule;
     //设置关闭时销毁

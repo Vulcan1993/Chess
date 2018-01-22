@@ -66,17 +66,17 @@ void AiMode::mousePressEvent(QMouseEvent *ev)
                 m_gameOver = true;
                 if(winner == red)
                 {
-                    QTimer::singleShot(300,this,SLOT(slotShowRedVictory()));
+                    QTimer::singleShot(300,this,SLOT(slot_showRedVictory()));
                 }
                 else
                 {
-                    QTimer::singleShot(300,this,SLOT(slotShowBlackVictory()));
+                    QTimer::singleShot(300,this,SLOT(slot_showBlackVictory()));
                 }
 
             }
             else
             {
-                QTimer::singleShot(100,this,SLOT(slotComputerClick()));
+                QTimer::singleShot(100,this,SLOT(slot_computerClick()));
 
             }
             update();
@@ -85,7 +85,7 @@ void AiMode::mousePressEvent(QMouseEvent *ev)
     }
     else
     {
-        undoStep();
+        slot_undoStep();
     }
 
 }
@@ -1090,7 +1090,7 @@ Step *AiMode::pruning()
 
 }
 
-void AiMode::slotDebug()
+void AiMode::slot_debug()
 {
     vector<Step*> *vStep1 = generateStepPao(9);
 #if 0
@@ -1109,7 +1109,7 @@ void AiMode::slotDebug()
     delete vStep1;
 }
 
-void AiMode::slotComputerClick()
+void AiMode::slot_computerClick()
 {
     if(m_alternate != m_aiCamp)
         return;
@@ -1127,11 +1127,11 @@ void AiMode::slotComputerClick()
             m_gameOver = true;
             if(winner == red)
             {
-                QTimer::singleShot(300,this,SLOT(slotShowRedVictory()));
+                QTimer::singleShot(300,this,SLOT(slot_showRedVictory()));
             }
             else
             {
-                QTimer::singleShot(300,this,SLOT(slotShowBlackVictory()));
+                QTimer::singleShot(300,this,SLOT(slot_showBlackVictory()));
             }
 
         }
@@ -1143,7 +1143,7 @@ void AiMode::slotComputerClick()
     update();
 }
 
-void AiMode::restart()
+void AiMode::slot_restart()
 {
     //重新设置棋子和棋盘位置
     initChess();
@@ -1159,21 +1159,21 @@ void AiMode::restart()
     //设置为没有最后移动的棋子
     m_finallyMoveChessMan = -1;
     if(m_alternate == m_aiCamp)
-        QTimer::singleShot(1000,this,SLOT(slotComputerClick()));
+        QTimer::singleShot(1000,this,SLOT(slot_computerClick()));
     update();
 }
 
-void AiMode::undoStep()
+void AiMode::slot_undoStep()
 {
-    Board::undoStep();
-    Board::undoStep();
+    Board::slot_undoStep();
+    Board::slot_undoStep();
 }
 
-void AiMode::slotStart()
+void AiMode::slot_start()
 {
 
     if(m_aiCamp == m_alternate)
-        QTimer::singleShot(100,this,SLOT(slotComputerClick()));
+        QTimer::singleShot(100,this,SLOT(slot_computerClick()));
 
-    Board::slotStart();
+    Board::slot_start();
 }

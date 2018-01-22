@@ -99,30 +99,30 @@ protected:
     void openGame(const QString fileName);
     QString file = "chess";
 signals:
-    void changeState(const QString str);
-    void changeMode(const QString str);
+    void signal_changeState(const QString str);
+    void signal_changeMode(const QString str);
 public slots:
-    void slotSave()
+    void slot_save()
     {
         saveGame(file);
     }
 
-    void slotOpen()
+    void slot_open()
     {
         openGame(file);
     }
 
     //开始
-    virtual void slotStart();
+    virtual void slot_start();
     //重新开始
-    virtual void restart();
+    virtual void slot_restart();
     //悔棋
-    virtual void undoStep();
-    void slotShowRedVictory();
-    void slotShowBlackVictory();
-    void slotRedXian();
-    void slotBlackXian();
-    virtual void slotInitialize();      //初始化时
+    virtual void slot_undoStep();
+    void slot_showRedVictory();
+    void slot_showBlackVictory();
+    void slot_redXian();
+    void slot_blackXian();
+    virtual void slot_initialize();      //初始化时
 
 };
 

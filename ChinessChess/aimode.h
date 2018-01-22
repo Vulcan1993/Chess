@@ -64,11 +64,11 @@ protected:
     int pruningMinScore(int level,int min);
     Step *pruning();
 private slots:
-    void slotDebug();
-    void slotComputerClick();
-    void restart();
-    void undoStep();
-    void slotStart();
+    void slot_debug();
+    void slot_computerClick();
+    void slot_restart();
+    void slot_undoStep();
+    void slot_start();
 
 };
 
