@@ -14,12 +14,12 @@ public:
    void mousePressEvent(QMouseEvent *ev);
 
 public slots:
-   void slotNetConnection();
-   void slotReadyRead();
-   void slotRetract();
+   void slot_netConnection();
+   void slot_readyRead();
+   void slot_retract();
 private :
-   bool color;
-   bool isServer;
+   bool m_color;
+   bool m_isServer;
    void click(QPoint p);
    
 };

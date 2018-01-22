@@ -12,7 +12,7 @@ public:
 
     int  result();
     //决定人执红还是执黑
-    bool ren;
+    bool m_ren;
     void mousePressEvent(QMouseEvent *ev);
     //电脑走回去
     void computerMove(vector<QPoint> &vp, vector<vector<QPoint> > &vv,bool state, int i,int);
@@ -27,7 +27,7 @@ public:
     void computerClick(double);
 
     //n步人工智能
-    int level;               //搜索深度
+    int m_level;               //搜索深度
     //极大极小分析法
     int getMaxScore(int level);
     int getMinScore(int level);
@@ -43,11 +43,11 @@ public:
     int score(bool side);
 
 private slots:
-    void slotComputerClick();
-    void slotDebug();
-    void slotYi();
-    void slotRead();
-    void slotRetract();
+    void slot_computerClick();
+    void slot_debug();
+    void slot_one();
+    void slot_read();
+    void slot_retract();
 
 };
 

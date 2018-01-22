@@ -8,28 +8,28 @@
 AiMode::AiMode(bool ren, int level)
 {
     //确定人走哪方的子
-    this->ren = ren;
+    this->m_ren = ren;
     if(ren == true)
-        label2->setText("电脑执黑");
+        m_label2->setText("电脑执黑");
     else
-        label2->setText("电脑执白");
+        m_label2->setText("电脑执白");
     //确搜索深度
-    this->level = level;
+    this->m_level = level;
     //true表示白子
     if(ren == true)
-        slotComputerClick();
+        slot_computerClick();
     //连接,实现一步对战两步
-    connect(btn6,SIGNAL(clicked(bool)),this,SLOT(slotYi()));
+    connect(m_btn6,SIGNAL(clicked(bool)),this,SLOT(slot_one()));
 }
 
 #if 1
 int AiMode::result()
 {
-    if(mytest::result() == 1 && winner == false)
+    if(mytest::result() == 1 && m_winner == false)
     {
         //如果不该人走了,则让电脑走
-        if(b != ren)
-            QTimer::singleShot(1000,this,SLOT( slotComputerClick()));
+        if(m_b != m_ren)
+            QTimer::singleShot(1000,this,SLOT( slot_computerClick()));
         update();
     }
     return 0;
@@ -43,13 +43,13 @@ int AiMode::result()
 
 void AiMode::mousePressEvent(QMouseEvent *ev)
 {
-    if(winner)
+    if(m_winner)
         return;
-    if(b == !ren)
+    if(m_b == !m_ren)
         return;
     int i,j;
-    j=ev->pos().x()/d;
-    i=ev->pos().y()/d;
+    j=ev->pos().x()/m_step;
+    i=ev->pos().y()/m_step;
     QPoint p(i,j);
     //不在棋盘内
     if(i<0||i>8||j<0||j>8)
@@ -59,28 +59,28 @@ void AiMode::mousePressEvent(QMouseEvent *ev)
     if(ev->button()==Qt::LeftButton)
     {
         vector<QPoint> v;
-        onepointexec(v,p,b);
+        onepointexec(v,p,m_b);
         if(0 != v.size())
         {
             //存储这一步
-            record(v,p,b);
-            if(b==true)
-                board[i][j]=white;
+            record(v,p,m_b);
+            if(m_b==true)
+                m_board[i][j]=white;
             else
-                board[i][j]=black;
+                m_board[i][j]=black;
             for(QPoint a:v)
             {
-                if(b==true)
-                    board[a.x()][a.y()]=white;
+                if(m_b==true)
+                    m_board[a.x()][a.y()]=white;
                 else
-                    board[a.x()][a.y()]=black;
+                    m_board[a.x()][a.y()]=black;
             }
             update();
         //该另一方走了
             //清除之前的提示
             clearEarning();
             result();
-           QTimer::singleShot(1000,this,SLOT( slotComputerClick()));
+           QTimer::singleShot(1000,this,SLOT( slot_computerClick()));
             //Sleep(100);
           //  computerClick();
          //   b = !b;
@@ -89,7 +89,7 @@ void AiMode::mousePressEvent(QMouseEvent *ev)
     }//leftbutton
 
     if(ev->button()==Qt::RightButton)
-        board[i][j]=kong;
+        m_board[i][j]=kong;
     update();
 
 }
@@ -103,20 +103,20 @@ void AiMode::computerMove(vector<QPoint> &vp, vector<vector<QPoint> > &vv, bool 
     //消除白方的走步
     if(state == true)
     {
-        board[vp[i].x()][vp[i].y()] = kong;
+        m_board[vp[i].x()][vp[i].y()] = kong;
         for(QPoint p : vv[i])
         {
-            board[p.x()][p.y()] = black;
+            m_board[p.x()][p.y()] = black;
         }
 
     }
     //消除黑方的走步
     else
     {
-        board[vp[i].x()][vp[i].y()] = kong;
+        m_board[vp[i].x()][vp[i].y()] = kong;
         for(QPoint p : vv[i])
         {
-            board[p.x()][p.y()] = white;
+            m_board[p.x()][p.y()] = white;
         }
     }
 }
@@ -126,20 +126,20 @@ void AiMode::computerMove(vector<QPoint> &vp,vector<vector<QPoint>> &vv,bool sta
     if(state == true)
     {
         //下这个点
-        board[vp[i].x()][vp[i].y()] = white;
+        m_board[vp[i].x()][vp[i].y()] = white;
         //翻子
         for(QPoint p : vv[i])
         {
-            board[p.x()][p.y()] = white;
+            m_board[p.x()][p.y()] = white;
         }
 
     }
     else
     {
-        board[vp[i].x()][vp[i].y()] = black;
+        m_board[vp[i].x()][vp[i].y()] = black;
         for(QPoint p : vv[i])
         {
-            board[p.x()][p.y()] = black;
+            m_board[p.x()][p.y()] = black;
         }
     }
 }
@@ -152,14 +152,14 @@ void AiMode::computerClick()
     vector<QPoint> vp;
     vector<vector<QPoint>> vv;
 
-    earn(vp,vv,b,false);
+    earn(vp,vv,m_b,false);
     if(vp.empty())
         return;
     int i = qrand()%vp.size();
 
-    computerMove(vp,vv,b,i);
+    computerMove(vp,vv,m_b,i);
 
-        record(vv[i],vp[i],b);
+        record(vv[i],vp[i],m_b);
 
 }
 
@@ -168,7 +168,7 @@ void AiMode::computerClick(bool)
 {
     vector<QPoint> vp;
     vector<vector<QPoint>> vv;
-    earn(vp,vv,b,false);
+    earn(vp,vv,m_b,false);
     //记录最大估值
     int maxScore = -10000;
     //记录最好的一步棋的下标
@@ -178,7 +178,7 @@ void AiMode::computerClick(bool)
     for(int i=0 ; i<vp.size() ; ++i)
     {
         //假设走一步,翻子
-        computerMove(vp,vv,b,i);
+        computerMove(vp,vv,m_b,i);
         //估值
         scoreTmp = score(true);
         //找到最大估值,最好的一步棋
@@ -188,13 +188,13 @@ void AiMode::computerClick(bool)
             maxStep = i;
         }
         //走回去
-        computerMove(vp,vv,b,i,0);
+        computerMove(vp,vv,m_b,i,0);
     }
     //走最好的一步
     if(maxStep!= -1)
     {
-        computerMove(vp,vv,b,maxStep);
-        record(vv[maxStep],vp[maxStep],b);
+        computerMove(vp,vv,m_b,maxStep);
+        record(vv[maxStep],vp[maxStep],m_b);
     }
     else
     {
@@ -209,7 +209,7 @@ void AiMode::computerClick(double)
 {
     vector<QPoint> vp;
     vector<vector<QPoint>> vv;
-    earn(vp,vv,b,false);
+    earn(vp,vv,m_b,false);
     //记录最大估值
     int maxScore = -10000;
     //记录最好的一步棋的下标
@@ -220,17 +220,17 @@ void AiMode::computerClick(double)
     for(int i=0 ; i<vp.size() ; ++i)
     {
         //假设电脑走一步,翻子
-        computerMove(vp,vv,b,i);
+        computerMove(vp,vv,m_b,i);
 
         vector<QPoint> vpr;
         vector<vector<QPoint>> vvr;
-        earn(vpr,vvr,!b,false);
+        earn(vpr,vvr,!m_b,false);
         minScore = 10000;
         //int minStep = -1;
         for(int i=0 ; i<vpr.size() ; ++i)
         {
             //假设人走一步,翻子
-            computerMove(vpr,vvr,!b,i);
+            computerMove(vpr,vvr,!m_b,i);
             //估值
             scoreTmp = score(false);
             //找到最小值，对电脑最不利的局面
@@ -239,7 +239,7 @@ void AiMode::computerClick(double)
                 minScore = scoreTmp;
             }
             //人再走回去
-            computerMove(vpr,vvr,!b,i,0);
+            computerMove(vpr,vvr,!m_b,i,0);
         }
         if(maxScore < minScore)
         {
@@ -247,13 +247,13 @@ void AiMode::computerClick(double)
             maxStep = i;
         }
         //走回去
-        computerMove(vp,vv,b,i,0);
+        computerMove(vp,vv,m_b,i,0);
     }
     //走最好的一步
     if(maxStep != -1)
     {
-        computerMove(vp,vv,b,maxStep);
-        record(vv[maxStep],vp[maxStep],b);
+        computerMove(vp,vv,m_b,maxStep);
+        record(vv[maxStep],vp[maxStep],m_b);
     }
     else
     {
@@ -268,7 +268,7 @@ int AiMode::getMaxScore(int level)
         return score(true);
     vector<QPoint> vp;
     vector<vector<QPoint>> vv;
-    earn(vp,vv,b,false);
+    earn(vp,vv,m_b,false);
     //记录最大估值
     int maxScore = -10000;
     //记录最好的一步棋的下标
@@ -278,7 +278,7 @@ int AiMode::getMaxScore(int level)
     for(int i=0 ; i<vp.size() ; ++i)
     {
         //假设走一步,翻子
-        computerMove(vp,vv,b,i);
+        computerMove(vp,vv,m_b,i);
         //估值
         //scoreTmp = score(true);
         scoreTmp = getMinScore(level - 1);
@@ -290,7 +290,7 @@ int AiMode::getMaxScore(int level)
             maxStep = i;
         }
         //走回去
-        computerMove(vp,vv,b,i,0);
+        computerMove(vp,vv,m_b,i,0);
     }
     return maxScore;
 }
@@ -301,7 +301,7 @@ int AiMode::getMinScore(int level)
         return score(true);
     vector<QPoint> vp;
     vector<vector<QPoint>> vv;
-    earn(vp,vv,!b,false);
+    earn(vp,vv,!m_b,false);
     //记录最大估值
     int minScore = 10000;
     //记录最好的一步棋的下标
@@ -310,7 +310,7 @@ int AiMode::getMinScore(int level)
     for(int i=0 ; i<vp.size() ; ++i)
     {
         //假设走一步,翻子
-        computerMove(vp,vv,!b,i);
+        computerMove(vp,vv,!m_b,i);
         //估值
         //scoreTmp = score(true);
         scoreTmp = getMaxScore(level - 1);
@@ -321,7 +321,7 @@ int AiMode::getMinScore(int level)
             minScore = scoreTmp;
         }
         //走回去
-        computerMove(vp,vv,!b,i,0);
+        computerMove(vp,vv,!m_b,i,0);
     }
     return minScore;
 }
@@ -330,7 +330,7 @@ void AiMode::computerClick(int level)
 {
     vector<QPoint> vp;
     vector<vector<QPoint>> vv;
-    earn(vp,vv,b,false);
+    earn(vp,vv,m_b,false);
     //记录最大估值
     int maxScore = -10000;
     //记录最好的一步棋的下标
@@ -340,7 +340,7 @@ void AiMode::computerClick(int level)
     for(int i=0 ; i<vp.size() ; ++i)
     {
         //假设走一步,翻子
-        computerMove(vp,vv,b,i);
+        computerMove(vp,vv,m_b,i);
         //估值
         //scoreTmp = score(true);
         scoreTmp = getMinScore(level - 1);
@@ -351,13 +351,13 @@ void AiMode::computerClick(int level)
             maxStep = i;
         }
         //走回去
-        computerMove(vp,vv,b,i,0);
+        computerMove(vp,vv,m_b,i,0);
     }
     //走最好的一步
     if(maxStep!= -1)
     {
-        computerMove(vp,vv,b,maxStep);
-        record(vv[maxStep],vp[maxStep],b);
+        computerMove(vp,vv,m_b,maxStep);
+        record(vv[maxStep],vp[maxStep],m_b);
     }
     else
     {
@@ -376,7 +376,7 @@ int AiMode::getMaxScore(int level,int max)
         return score(true);
     vector<QPoint> vp;
     vector<vector<QPoint>> vv;
-    earn(vp,vv,b,false);
+    earn(vp,vv,m_b,false);
     //记录最大估值
     int maxScore = -10000;
     //记录最好的一步棋的下标
@@ -386,7 +386,7 @@ int AiMode::getMaxScore(int level,int max)
     for(int i=0 ; i<vp.size() ; ++i)
     {
         //假设走一步,翻子
-        computerMove(vp,vv,b,i);
+        computerMove(vp,vv,m_b,i);
         //估值
         //scoreTmp = score(true);
         scoreTmp = getMinScore(level - 1,maxScore);
@@ -394,7 +394,7 @@ int AiMode::getMaxScore(int level,int max)
         if(scoreTmp > max)
         {
             //走回去
-            computerMove(vp,vv,b,i,0);
+            computerMove(vp,vv,m_b,i,0);
             return scoreTmp;
         }
         //找到最大估值,最好的一步棋
@@ -404,7 +404,7 @@ int AiMode::getMaxScore(int level,int max)
             maxStep = i;
         }
         //走回去
-        computerMove(vp,vv,b,i,0);
+        computerMove(vp,vv,m_b,i,0);
     }
     return maxScore;
 }
@@ -415,7 +415,7 @@ int AiMode::getMinScore(int level,int min)
         return score(true);
     vector<QPoint> vp;
     vector<vector<QPoint>> vv;
-    earn(vp,vv,!b,false);
+    earn(vp,vv,!m_b,false);
     //记录最大估值
     int minScore = 10000;
     //记录最好的一步棋的下标
@@ -424,7 +424,7 @@ int AiMode::getMinScore(int level,int min)
     for(int i=0 ; i<vp.size() ; ++i)
     {
         //假设走一步,翻子
-        computerMove(vp,vv,!b,i);
+        computerMove(vp,vv,!m_b,i);
         //估值
         //scoreTmp = score(true);
         scoreTmp = getMaxScore(level - 1,minScore);
@@ -432,7 +432,7 @@ int AiMode::getMinScore(int level,int min)
         if(scoreTmp < min)
         {
             //走回去
-            computerMove(vp,vv,!b,i,0);
+            computerMove(vp,vv,!m_b,i,0);
             return scoreTmp;
         }
         //找到最大估值,最好的一步棋
@@ -441,7 +441,7 @@ int AiMode::getMinScore(int level,int min)
             minScore = scoreTmp;
         }
         //走回去
-        computerMove(vp,vv,!b,i,0);
+        computerMove(vp,vv,!m_b,i,0);
     }
     return minScore;
 }
@@ -452,7 +452,7 @@ void AiMode::computerClick(char level)
 {
     vector<QPoint> vp;
     vector<vector<QPoint>> vv;
-    earn(vp,vv,b,false);
+    earn(vp,vv,m_b,false);
     //记录最大估值
     int maxScore = -10000;
     //记录最好的一步棋的下标
@@ -462,7 +462,7 @@ void AiMode::computerClick(char level)
     for(int i=0 ; i<vp.size() ; ++i)
     {
         //假设走一步,翻子
-        computerMove(vp,vv,b,i);
+        computerMove(vp,vv,m_b,i);
         //估值
         //scoreTmp = score(true);
         scoreTmp = getMinScore(level - 1,maxScore);
@@ -473,13 +473,13 @@ void AiMode::computerClick(char level)
             maxStep = i;
         }
         //走回去
-        computerMove(vp,vv,b,i,0);
+        computerMove(vp,vv,m_b,i,0);
     }
     //走最好的一步
     if(maxStep!= -1)
     {
-        computerMove(vp,vv,b,maxStep);
-        record(vv[maxStep],vp[maxStep],b);
+        computerMove(vp,vv,m_b,maxStep);
+        record(vv[maxStep],vp[maxStep],m_b);
     }
     else
     {
@@ -495,63 +495,63 @@ int AiMode::score(bool side)
     {
         for(j=1;j<7;j++)
         {
-            if(board[i][j]==white)
+            if(m_board[i][j]==white)
                 sum1++;
-            if(board[i][j]==black)
+            if(m_board[i][j]==black)
                 sum2++;
 
         }
     }
     //四角
-    if(board[0][0] == white)
+    if(m_board[0][0] == white)
         sum1 += 8;
-    if(board[0][0] == black)
+    if(m_board[0][0] == black)
         sum2 +=8;
 
-    if(board[0][7] == white)
+    if(m_board[0][7] == white)
         sum1 += 8;
-    if(board[0][7] == black)
+    if(m_board[0][7] == black)
         sum2 +=8;
 
-    if(board[7][0] == white)
+    if(m_board[7][0] == white)
         sum1 += 8;
-    if(board[7][0] == black)
+    if(m_board[7][0] == black)
         sum2 +=8;
 
-    if(board[7][7] == white)
+    if(m_board[7][7] == white)
         sum1 += 8;
-    if(board[7][7] == black)
+    if(m_board[7][7] == black)
         sum2 +=8;
     //左
     for(i=1 ,j=0 ; i<7 ; ++i)
     {
-        if(board[i][j] == white)
+        if(m_board[i][j] == white)
             sum1+=3;
-        if(board[i][j] == black)
+        if(m_board[i][j] == black)
             sum2+=3;
     }
     //上
     for(i=0 ,j=1 ; j<7 ; ++j)
     {
-        if(board[i][j] == white)
+        if(m_board[i][j] == white)
             sum1+=3;
-        if(board[i][j] == black)
+        if(m_board[i][j] == black)
             sum2+=3;
     }
     //下
     for(i=7 ,j=1 ; j<7 ; ++j)
     {
-        if(board[i][j] == white)
+        if(m_board[i][j] == white)
             sum1+=3;
-        if(board[i][j] == black)
+        if(m_board[i][j] == black)
             sum2+=3;
     }
     //右
     for(i=1 ,j=7 ; i<7 ; ++i)
     {
-        if(board[i][j] == white)
+        if(m_board[i][j] == white)
             sum1+=3;
-        if(board[i][j] == black)
+        if(m_board[i][j] == black)
             sum2+=3;
     }
     if(side == true)
@@ -563,9 +563,9 @@ int AiMode::score(bool side)
 }
 
 
-void AiMode::slotComputerClick()
+void AiMode::slot_computerClick()
 {
-    if(b == ren)
+    if(m_b == m_ren)
         return;
 
     //随机
@@ -573,7 +573,7 @@ void AiMode::slotComputerClick()
     //一步
     //computerClick(true);
     //两步
-    computerClick(level);
+    computerClick(m_level);
     //n步极大极小
     //computerClick(level);
     result();
@@ -582,107 +582,107 @@ void AiMode::slotComputerClick()
 
 
 
-void AiMode::slotDebug()
+void AiMode::slot_debug()
 {
-    b = true;
-    board[0][0] = black;
-    board[0][1] = black;
-    board[0][2] = black;
-    board[0][3] = black;
-    board[0][4] = black;
-    board[0][5] = black;
-    board[0][6] = black;
-    board[0][7] = black;
+    m_b = true;
+    m_board[0][0] = black;
+    m_board[0][1] = black;
+    m_board[0][2] = black;
+    m_board[0][3] = black;
+    m_board[0][4] = black;
+    m_board[0][5] = black;
+    m_board[0][6] = black;
+    m_board[0][7] = black;
 
-    board[1][0] = kong;
-    board[1][1] = black;
-    board[1][2] = black;
-    board[1][3] = black;
-    board[1][4] = black;
-    board[1][5] = black;
-    board[1][6] = black;
-    board[1][7] = kong;
+    m_board[1][0] = kong;
+    m_board[1][1] = black;
+    m_board[1][2] = black;
+    m_board[1][3] = black;
+    m_board[1][4] = black;
+    m_board[1][5] = black;
+    m_board[1][6] = black;
+    m_board[1][7] = kong;
 
-    board[2][0] = kong;
-    board[2][1] = kong;
-    board[2][2] = white;
-    board[2][3] = white;
-    board[2][4] = white;
-    board[2][5] = white;
-    board[2][6] = white;
-    board[2][7] = white;
+    m_board[2][0] = kong;
+    m_board[2][1] = kong;
+    m_board[2][2] = white;
+    m_board[2][3] = white;
+    m_board[2][4] = white;
+    m_board[2][5] = white;
+    m_board[2][6] = white;
+    m_board[2][7] = white;
 
-    board[3][0] = black;
-    board[3][1] = kong;
-    board[3][2] = black;
-    board[3][3] = black;
-    board[3][4] = white;
-    board[3][5] = black;
-    board[3][6] = white;
-    board[3][7] = white;
+    m_board[3][0] = black;
+    m_board[3][1] = kong;
+    m_board[3][2] = black;
+    m_board[3][3] = black;
+    m_board[3][4] = white;
+    m_board[3][5] = black;
+    m_board[3][6] = white;
+    m_board[3][7] = white;
 
-    board[4][0] = white;
-    board[4][1] = kong;
-    board[4][2] = black;
-    board[4][3] = black;
-    board[4][4] = kong;
-    board[4][5] = black;
-    board[4][6] = white;
-    board[4][7] = black;
+    m_board[4][0] = white;
+    m_board[4][1] = kong;
+    m_board[4][2] = black;
+    m_board[4][3] = black;
+    m_board[4][4] = kong;
+    m_board[4][5] = black;
+    m_board[4][6] = white;
+    m_board[4][7] = black;
 
-    board[5][0] = kong;
-    board[5][1] = black;
-    board[5][2] = black;
-    board[5][3] = black;
-    board[5][4] = kong;
-    board[5][5] = kong;
-    board[5][6] = white;
-    board[5][7] = kong;
+    m_board[5][0] = kong;
+    m_board[5][1] = black;
+    m_board[5][2] = black;
+    m_board[5][3] = black;
+    m_board[5][4] = kong;
+    m_board[5][5] = kong;
+    m_board[5][6] = white;
+    m_board[5][7] = kong;
 
-    board[6][0] = white;
-    board[6][1] = kong;
-    board[6][2] = black;
-    board[6][3] = black;
-    board[6][4] = black;
-    board[6][5] = black;
-    board[6][6] = white;
-    board[6][7] = kong;
+    m_board[6][0] = white;
+    m_board[6][1] = kong;
+    m_board[6][2] = black;
+    m_board[6][3] = black;
+    m_board[6][4] = black;
+    m_board[6][5] = black;
+    m_board[6][6] = white;
+    m_board[6][7] = kong;
 
-    board[7][0] = white;
-    board[7][1] = white;
-    board[7][2] = black;
-    board[7][3] = black;
-    board[7][4] = black;
-    board[7][5] = black;
-    board[7][6] = black;
-    board[7][7] = black;
+    m_board[7][0] = white;
+    m_board[7][1] = white;
+    m_board[7][2] = black;
+    m_board[7][3] = black;
+    m_board[7][4] = black;
+    m_board[7][5] = black;
+    m_board[7][6] = black;
+    m_board[7][7] = black;
     update();
 }
 
-void AiMode::slotYi()
+void AiMode::slot_one()
 {
-    computerClick(level);
+    computerClick(m_level);
     result();
-    QTimer::singleShot(1000,this,SLOT(slotComputerClick()));
+    QTimer::singleShot(1000,this,SLOT(slot_computerClick()));
     update();
 }
 
-void AiMode::slotRead()
+void AiMode::slot_read()
 {
-    mytest::slotRead();
+    mytest::slot_read();
 
-    if(b == !ren)
+    if(m_b == !m_ren)
     {
-        QTimer::singleShot(100,this,SLOT(slotComputerClick()));
+        QTimer::singleShot(100,this,SLOT(slot_computerClick()));
         update();
 
     }
 }
 
-void AiMode::slotRetract()
+void AiMode::slot_retract()
 {
-    mytest::slotRetract();
-    mytest::slotRetract();
+    mytest::slot_retract();
+    mytest::slot_retract();
 }
 
 

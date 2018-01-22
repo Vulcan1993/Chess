@@ -12,55 +12,55 @@ MultiPage::MultiPage(QWidget *parent)
                         "\t它的游戏规则简单，因此上手很容易，但是它的变化又非常复杂。\n"
                         "\t有一种说法是：只需要几分钟学会它，却需要一生的时间去精通它。");
 #endif
-    lAhead = new QLabel("当前选择: 人人对战");
-    lAhead->setStyleSheet("QLabel{font:bold 16px; color:blue}");
+    m_lAhead = new QLabel("当前选择: 人人对战");
+    m_lAhead->setStyleSheet("QLabel{font:bold 16px; color:blue}");
     QHBoxLayout *lay = new QHBoxLayout(this);
-    lay->addWidget(lAhead);
+    lay->addWidget(m_lAhead);
 }
 
 
 AiPage::AiPage(QWidget *parent)
     :QWidget(parent)
 {
-    lAhead = new QLabel("请选择:");
-        lAhead->setStyleSheet("QLabel{font:bold 16px; color:blue}");
-    comAhead = new QComboBox;
-        comAhead->setStyleSheet("QComboBox{font:bold 16px; color:blue}");
-    comAhead->addItem("执黑(先行)");
-    comAhead->addItem("执白");
-    lDifficulty = new QLabel("难度");
-        lDifficulty->setStyleSheet("QLabel{font:bold 16px; color:blue}");
-    comDifficulty = new QComboBox;
-        comDifficulty->setStyleSheet("QComboBox{font:bold 16px; color:blue}");
-    comDifficulty->addItem("初级");
-    comDifficulty->addItem("中级");
-    comDifficulty->addItem("高级");
+    m_lAhead = new QLabel("请选择:");
+        m_lAhead->setStyleSheet("QLabel{font:bold 16px; color:blue}");
+    m_comAhead = new QComboBox;
+        m_comAhead->setStyleSheet("QComboBox{font:bold 16px; color:blue}");
+    m_comAhead->addItem("执黑(先行)");
+    m_comAhead->addItem("执白");
+    m_lDifficulty = new QLabel("难度");
+        m_lDifficulty->setStyleSheet("QLabel{font:bold 16px; color:blue}");
+    m_comDifficulty = new QComboBox;
+        m_comDifficulty->setStyleSheet("QComboBox{font:bold 16px; color:blue}");
+    m_comDifficulty->addItem("初级");
+    m_comDifficulty->addItem("中级");
+    m_comDifficulty->addItem("高级");
 
     //设置不可编辑
-    comAhead->setEditable(false);
-    comDifficulty->setEditable(false);
+    m_comAhead->setEditable(false);
+    m_comDifficulty->setEditable(false);
 
     QGridLayout *lay = new QGridLayout(this);
-    lay->addWidget(lAhead,0,0);
-    lay->addWidget(comAhead,0,1);
-    lay->addWidget(lDifficulty,1,0);
-    lay->addWidget(comDifficulty,1,1);
+    lay->addWidget(m_lAhead,0,0);
+    lay->addWidget(m_comAhead,0,1);
+    lay->addWidget(m_lDifficulty,1,0);
+    lay->addWidget(m_comDifficulty,1,1);
 }
 //ahead为false时是执黑(先走),difficulty是难度
 void AiPage::setting(bool  &ahead, int &difficulty)
 {
-    if(comAhead->currentIndex() == 0)
+    if(m_comAhead->currentIndex() == 0)
     {
         //执黑
         ahead = false;
     }
     else
         ahead = true;      //执白
-    if(comDifficulty->currentIndex() == 0)
+    if(m_comDifficulty->currentIndex() == 0)
         difficulty = 2;
     else
     {
-        if(comDifficulty->currentIndex() == 1)
+        if(m_comDifficulty->currentIndex() == 1)
             difficulty = 4;
         else
             difficulty = 6;
@@ -71,26 +71,26 @@ void AiPage::setting(bool  &ahead, int &difficulty)
 NetPage::NetPage(QWidget *parent)
     :QWidget(parent)
 {
-    lMode = new QLabel("请选择:");
-        lMode->setStyleSheet("QLabel{font:bold 16px; color:blue}");
-    comMode = new QComboBox;
-        comMode->setStyleSheet("QComboBox{font:bold 16px; color:blue}");
-    comMode->addItem("服务器(执黑先行)");
-    comMode->addItem("客户端(执白)");
-    comMode->addItem("客户端(执黑先行)");
-    comMode->addItem("服务器(执白");
+    m_lMode = new QLabel("请选择:");
+        m_lMode->setStyleSheet("QLabel{font:bold 16px; color:blue}");
+    m_comMode = new QComboBox;
+        m_comMode->setStyleSheet("QComboBox{font:bold 16px; color:blue}");
+    m_comMode->addItem("服务器(执黑先行)");
+    m_comMode->addItem("客户端(执白)");
+    m_comMode->addItem("客户端(执黑先行)");
+    m_comMode->addItem("服务器(执白");
 
     //设置为不可编辑
-    comMode->setEditable(false);
+    m_comMode->setEditable(false);
 
     QHBoxLayout *lay = new QHBoxLayout(this);
-    lay->addWidget(lMode);
-    lay->addWidget(comMode);
+    lay->addWidget(m_lMode);
+    lay->addWidget(m_comMode);
 }
 
 void NetPage::setting(bool &isServer, bool &color)
 {
-    if(comMode->currentIndex() == 0 )
+    if(m_comMode->currentIndex() == 0 )
     {
         //选的是服务器(执黑先行)
         isServer = true;
@@ -98,7 +98,7 @@ void NetPage::setting(bool &isServer, bool &color)
     }
     else
     {
-        if(comMode->currentIndex() == 1)
+        if(m_comMode->currentIndex() == 1)
         {
             //客户端(执白)
             isServer = false;
@@ -106,7 +106,7 @@ void NetPage::setting(bool &isServer, bool &color)
         }
         else
         {
-            if(comMode->currentIndex() == 2)
+            if(m_comMode->currentIndex() == 2)
             {   //客户端(执黑先行)
                 isServer = false;
                 color = false;

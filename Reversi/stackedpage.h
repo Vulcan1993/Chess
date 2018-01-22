@@ -12,7 +12,7 @@ class MultiPage : public QWidget
 public:
     MultiPage(QWidget *parent=0);
 
-    QLabel *lAhead;				//提示,先行
+    QLabel *m_lAhead;				//提示,先行
 
 };
 
@@ -27,10 +27,10 @@ public:
     void setting(bool & ahead, int & difficulty);
 
 private:
-    QLabel *lDifficulty;        //提示 ,难度
-    QLabel *lAhead;             //提示,先行
-    QComboBox *comDifficulty;
-    QComboBox *comAhead;
+    QLabel *m_lDifficulty;        //提示 ,难度
+    QLabel *m_lAhead;             //提示,先行
+    QComboBox *m_comDifficulty;
+    QComboBox *m_comAhead;
 };
 
 
@@ -43,8 +43,8 @@ public:
     //如果是服务器端,返回true,否则false
     void setting(bool &isServer, bool &color);
 private:
-    QLabel *lMode;
-    QComboBox *comMode;
+    QLabel *m_lMode;
+    QComboBox *m_comMode;
 };
 
 #endif // STACKEDPAGE_H

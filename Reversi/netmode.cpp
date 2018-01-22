@@ -3,17 +3,17 @@
 NetMode::NetMode(bool isServer, bool color)
 {
     //btn3->setEnabled(false);
-    btn3->setVisible(false);
+    m_btn3->setVisible(false);
     //btn4->setEnabled(false);
-    btn4->setVisible(false);
-    this->color = color;
+    m_btn4->setVisible(false);
+    this->m_color = color;
     if(color == true)
-        label2->setText("执白");
+        m_label2->setText("执白");
     else
-        label2->setText("执黑");
-    connect(btn2,SIGNAL(clicked()),this,SLOT(slotRetract()));
+        m_label2->setText("执黑");
+    connect(m_btn2,SIGNAL(clicked()),this,SLOT(slot_retract()));
 
-    this->isServer = isServer;
+    this->m_isServer = isServer;
     if(isServer)
     {
         //创建服务器
@@ -26,8 +26,8 @@ NetMode::NetMode(bool isServer, bool color)
         }
         //当客户端连接时,调用slotNetConnection槽
         connect(server,SIGNAL(newConnection()),
-                this,SLOT(slotNetConnection()));
-        label->setText("当前状态: 等待连接 ....");
+                this,SLOT(slot_netConnection()));
+        m_label->setText("当前状态: 等待连接 ....");
     }
     //客户端
     else
@@ -35,22 +35,22 @@ NetMode::NetMode(bool isServer, bool color)
         socket = new QTcpSocket(this);
         //连接
         socket->connectToHost("127.0.0.1",9988);
-        label->setText("当前状态: 连接中 ....");
-        connect(socket,SIGNAL(readyRead()),this,SLOT(slotReadyRead()));
+        m_label->setText("当前状态: 连接中 ....");
+        connect(socket,SIGNAL(readyRead()),this,SLOT(slot_readyRead()));
     }
 }
 
 void NetMode::mousePressEvent(QMouseEvent *ev)
 {
-    if(winner)
+    if(m_winner)
         return;
 
-    if(b != color)
+    if(m_b != m_color)
         return;
 
     int i,j;
-    j=ev->pos().x()/d;
-    i=ev->pos().y()/d;
+    j=ev->pos().x()/m_step;
+    i=ev->pos().y()/m_step;
     QPoint p(i,j);
     //不在棋盘内
     if(i<0||i>8||j<0||j>8)
@@ -72,14 +72,14 @@ void NetMode::mousePressEvent(QMouseEvent *ev)
     }//leftbutton
 
     if(ev->button()==Qt::RightButton)
-        board[i][j]=kong;
+        m_board[i][j]=kong;
     update();
 }
 
 
 
 
-void NetMode::slotNetConnection()
+void NetMode::slot_netConnection()
 {
     //判断是否已连接,网络对战是两个人,
     if(socket == NULL)
@@ -90,11 +90,11 @@ void NetMode::slotNetConnection()
 
         //为新的socket提供槽函数,来接收数据
         connect(socket,SIGNAL(readyRead()),
-                this,SLOT(slotReadyRead()));
-        if(b == true)
-            label->setText("当前状态: 已连接, 白子走");
+                this,SLOT(slot_readyRead()));
+        if(m_b == true)
+            m_label->setText("当前状态: 已连接, 白子走");
         else
-            label->setText("当前状态: 已连接, 黑子走");
+            m_label->setText("当前状态: 已连接, 黑子走");
       //  label->setText("当前状态: 已连接");
         //通知对方已连接
         QByteArray buf;
@@ -109,7 +109,7 @@ void NetMode::slotNetConnection()
 //是2表示悔棋申请,(只有一个字节)
 //是3时,是通知客户端已连接
 //是4时,协调悔棋信息,第二字节是1时同意,2时不同意
-void NetMode::slotReadyRead()
+void NetMode::slot_readyRead()
 {
     //服务器用白子,客户端用黑子
    //创建一个字节数组,读取所有数据
@@ -160,10 +160,10 @@ void NetMode::slotReadyRead()
         }
         break;
     case 3:
-        if(b == true)
-            label->setText("当前状态: 已连接, 白子走");
+        if(m_b == true)
+            m_label->setText("当前状态: 已连接, 白子走");
         else
-            label->setText("当前状态: 已连接, 黑子走");
+            m_label->setText("当前状态: 已连接, 黑子走");
         break;
     case 4:
         //if(buf[1] == 2)
@@ -181,7 +181,7 @@ void NetMode::slotReadyRead()
     update();
 }
 
-void NetMode::slotRetract()
+void NetMode::slot_retract()
 {
     QByteArray buf;
     buf.append(2);
@@ -194,21 +194,21 @@ void NetMode::click(QPoint p)
     i=p.x();
     j=p.y();
     vector<QPoint> v;
-    onepointexec(v,p,b);
+    onepointexec(v,p,m_b);
     if(0 != v.size())
     {
         //存储这一步
-        record(v,p,b);
-        if(b==true)
-            board[i][j]=white;
+        record(v,p,m_b);
+        if(m_b==true)
+            m_board[i][j]=white;
         else
-            board[i][j]=black;
+            m_board[i][j]=black;
         for(QPoint a:v)
         {
-            if(b==true)
-                board[a.x()][a.y()]=white;
+            if(m_b==true)
+                m_board[a.x()][a.y()]=white;
             else
-                board[a.x()][a.y()]=black;
+                m_board[a.x()][a.y()]=black;
         }
         //该另一方走了
         //清除之前的提示

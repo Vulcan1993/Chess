@@ -14,12 +14,12 @@ class stacked : public QWidget
 public:
     explicit stacked(QWidget *parent = 0);
 
-    QListWidget *leftlist;      //左边的列表
-    QStackedWidget *stack;      //栈部件
+    QListWidget *m_leftlist;      //左边的列表
+    QStackedWidget *m_stack;      //栈部件
 
-    MultiPage *m;
-    AiPage *a;
-    NetPage *n;
+    MultiPage *m_multiPage;
+    AiPage *m_aiPage;
+    NetPage *m_netPage;
 signals:
 
 public slots:

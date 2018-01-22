@@ -28,16 +28,16 @@ public:
     void clearEarning();		//清除提示
     int judge();
 
-    bool winner=false;
+    bool m_winner=false;
 
     int earning();
     void earn(vector<QPoint> &vp, vector<vector<QPoint> > &vv, bool side, bool state=true);
     virtual int  result();
 
     //悔棋用的数据结构
-    vector<bool> retVB;         //保存每步是谁走
-    vector<QPoint> retVP;       //记录每步的点
-    vector<vector<QPoint>> retVV;    //记录每步翻过来的点
+    vector<bool> m_retVB;         //保存每步是谁走
+    vector<QPoint> m_retVP;       //记录每步的点
+    vector<vector<QPoint>> m_retVV;    //记录每步翻过来的点
     virtual void retract();             //悔棋
 
     void record(vector<QPoint> &v,QPoint p,bool side); //记录每步的状况
@@ -46,39 +46,39 @@ public:
     bool read();                //读取游戏状态
 protected:
     //保存棋盘状态
-    QString fileName = "one";
+    QString m_fileName = "one";
 
-    QPushButton *btn1;
-    QPushButton *btn2;
-    QPushButton *btn3;
-    QPushButton *btn4;
-    QPushButton *btn8;
-    QPushButton *btn7;
-    QPushButton *btn6;
-    QPushButton *btn5;
-    QPushButton *btn9;
-    QSpacerItem *spacer;
-    QVBoxLayout *vLayout;
-    QHBoxLayout *hLayout;
-    QLabel *label;
-    QLabel *label2;
-    int d=80;
-    bool b=false;
+    QPushButton *m_btn1;
+    QPushButton *m_btn2;
+    QPushButton *m_btn3;
+    QPushButton *m_btn4;
+    QPushButton *m_btn8;
+    QPushButton *m_btn7;
+    QPushButton *m_btn6;
+    QPushButton *m_btn5;
+    QPushButton *m_btn9;
+    QSpacerItem *m_spacer;
+    QVBoxLayout *m_vLayout;
+    QHBoxLayout *m_hLayout;
+    QLabel *m_label;
+    QLabel *m_label2;
+    int m_step=80;
+    bool m_b=false;
     enum type{kong,black,white,blackcircle,whitecircle};
-    type board[8][8];
-    QPoint sky[SKYNUM];
-    QTimer *timer;
-    QPoint fangxiang[8];
+    type m_board[8][8];
+    QPoint m_sky[SKYNUM];
+    QTimer *m_timer;
+    QPoint m_direction[8];
 signals:
-    void signal1();
+    void signal_1();
 protected slots:
 
-    void slotEarning();
-    virtual void slotRetract();
-    void slotrestart();
-    void slotWrite();
-    virtual void slotRead();
-    void slotGoBack();
+    void slot_earning();
+    virtual void slot_retract();
+    void slot_restart();
+    void slot_write();
+    virtual void slot_read();
+    void slot_goBack();
 };
 
 
