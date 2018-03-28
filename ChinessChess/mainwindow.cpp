@@ -49,13 +49,13 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     //通过信号和槽通信来改变状态栏的显示信息
-    connect(m_actSave,SIGNAL(triggered(bool)),m_board,SLOT(slotSave()));
-    connect(m_actOpen,SIGNAL(triggered(bool)),m_board,SLOT(slotOpen()));
-    connect(m_board,SIGNAL(changeState(const QString)),this,SLOT(slot_setState(const QString)));
-    connect(m_board,SIGNAL(changeMode(const QString)),this,SLOT(slot_setMode(const QString)));
-    connect(m_actStart,SIGNAL(triggered(bool)),m_board,SLOT(slotStart()));
-    connect(m_actRestart,SIGNAL(triggered(bool)),m_board,SLOT(restart()));
-    connect(m_actUndoStep,SIGNAL(triggered(bool)),m_board,SLOT(undoStep()));
+    connect(m_actSave,SIGNAL(triggered(bool)),m_board,SLOT(slot_save()));
+    connect(m_actOpen,SIGNAL(triggered(bool)),m_board,SLOT(slot_open()));
+    connect(m_board,SIGNAL(signal_changeState(const QString)),this,SLOT(slot_setState(const QString)));
+    connect(m_board,SIGNAL(signal_changeMode(const QString)),this,SLOT(slot_setMode(const QString)));
+    connect(m_actStart,SIGNAL(triggered(bool)),m_board,SLOT(slot_start()));
+    connect(m_actRestart,SIGNAL(triggered(bool)),m_board,SLOT(slot_restart()));
+    connect(m_actUndoStep,SIGNAL(triggered(bool)),m_board,SLOT(slot_undoStep()));
 
 
 
@@ -178,13 +178,13 @@ void MainWindow::setBoard()
 
     //重新连接信号和槽
     //通过信号和槽通信来改变状态栏的显示信息
-    connect(m_actSave,SIGNAL(triggered(bool)),m_board,SLOT(slotSave()));
-    connect(m_actOpen,SIGNAL(triggered(bool)),m_board,SLOT(slotOpen()));
+    connect(m_actSave,SIGNAL(triggered(bool)),m_board,SLOT(slot_Save()));
+    connect(m_actOpen,SIGNAL(triggered(bool)),m_board,SLOT(slot_Open()));
     connect(m_board,SIGNAL(changeState(const QString)),this,SLOT(slot_setState(const QString)));
     connect(m_board,SIGNAL(changeMode(const QString)),this,SLOT(slot_setMode(const QString)));
-    connect(m_actStart,SIGNAL(triggered(bool)),m_board,SLOT(slotStart()));
-    connect(m_actRestart,SIGNAL(triggered(bool)),m_board,SLOT(restart()));
-    connect(m_actUndoStep,SIGNAL(triggered(bool)),m_board,SLOT(undoStep()));
+    connect(m_actStart,SIGNAL(triggered(bool)),m_board,SLOT(slot_Start()));
+    connect(m_actRestart,SIGNAL(triggered(bool)),m_board,SLOT(slot_restart()));
+    connect(m_actUndoStep,SIGNAL(triggered(bool)),m_board,SLOT(slot_undoStep()));
 
 
 }
