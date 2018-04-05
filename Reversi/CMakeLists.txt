@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 2.8.11)
 
 #设置工程名
-project(Chess)
+project(Reversi)
 
 #设置自动生成moc文件
 set(CMAKE_AUTOMOC ON)
@@ -11,30 +11,12 @@ find_path(QT_DIR QT_DIR-NOTFOUND)
 
 if(QT_DIR STREQUAL "QT_DIR-NOTFOUND")
     message(FATAL_ERROR "Can't find QT_DIR")
-
 endif()
 
-message(****************  ${QT_DIR})
-message(****************  )
-#不管用
-#SET(CMAKE_MODULE_PATH ${QT_DIR}/lib/cmake/)
-
-#管用,配合设置find_package( Qt5Widgets NO_SYSTEM_ENVIRONMENT_PATH)
-#set (CMAKE_PREFIX_PATH ${QT_DIR}/lib/cmake/)
-
-message(****************  ${CMAKE_MODULE_PATH})
-message(****************  ${CMAKE_PREFIX_PATH})
-#不管用
-#set(CMAKE_FIND_ROOT_PATH ${QT_DIR}/lib/cmake)
-#查找所需的Qt库文件
-#管用,直接加PATHS, 并设置NO_SYSTEM_ENVIRONMENT_PATH
-#find_package(Qt5Widgets PATHS ${QT_DIR}/lib/cmake/ NO_SYSTEM_ENVIRONMENT_PATH)
 find_package(Qt5Widgets PATHS ${QT_DIR}/lib/cmake/ NO_SYSTEM_ENVIRONMENT_PATH)
 find_package(Qt5Core PATHS ${QT_DIR}/lib/cmake/ NO_SYSTEM_ENVIRONMENT_PATH)
 find_package(Qt5Gui PATHS ${QT_DIR}/lib/cmake/ NO_SYSTEM_ENVIRONMENT_PATH)
 find_package(Qt5Network PATHS ${QT_DIR}/lib/cmake/ NO_SYSTEM_ENVIRONMENT_PATH)
-
-
 
 #设置包含当前目录
 set(CMAKE_INCLUDE_CURRENT_DIR ON)

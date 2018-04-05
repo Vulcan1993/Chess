@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 2.8.11)
 
 #设置工程名
-project(Chess)
+project(ChinessChess)
 
 #设置自动生成moc文件
 set(CMAKE_AUTOMOC ON)
@@ -13,18 +13,6 @@ if(QT_DIR STREQUAL "QT_DIR-NOTFOUND")
     message(FATAL_ERROR "Can't find QT_DIR")
 endif()
 
-
-#不管用
-#SET(CMAKE_MODULE_PATH ${QT_DIR}/lib/cmake/)
-
-#管用,配合设置find_package( Qt5Widgets NO_SYSTEM_ENVIRONMENT_PATH)
-#set (CMAKE_PREFIX_PATH ${QT_DIR}/lib/cmake/)
-
-#不管用
-#set(CMAKE_FIND_ROOT_PATH ${QT_DIR}/lib/cmake)
-#查找所需的Qt库文件
-#管用,直接加PATHS, 并设置NO_SYSTEM_ENVIRONMENT_PATH
-#find_package(Qt5Widgets PATHS ${QT_DIR}/lib/cmake/ NO_SYSTEM_ENVIRONMENT_PATH)
 find_package(Qt5Widgets PATHS ${QT_DIR}/lib/cmake/ NO_SYSTEM_ENVIRONMENT_PATH)
 find_package(Qt5Core PATHS ${QT_DIR}/lib/cmake/ NO_SYSTEM_ENVIRONMENT_PATH)
 find_package(Qt5Gui PATHS ${QT_DIR}/lib/cmake/ NO_SYSTEM_ENVIRONMENT_PATH)
@@ -51,7 +39,6 @@ set(HEAD_FILES
 set(SRC_FILES
 	aimode.cpp
 	board.cpp
-	#chessman.cpp
 	controlpanel.cpp
 	dockctrlpanel.cpp
 	main.cpp
@@ -74,8 +61,6 @@ set(RCC_FILES
 	chessman1.qrc
 	chessman2.qrc
 	icon.qrc
-	#imgaes.qrc
-	#one.qrc
 )
 #通过.ui文件生成对应的文件
 qt5_wrap_ui(WRAP_UI ${UI_FILES})

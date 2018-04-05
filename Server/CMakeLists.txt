@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 2.8.11)
 
 #设置工程名
-project(Chess)
+project(Server)
 
 #设置自动生成moc文件
 set(CMAKE_AUTOMOC ON)
@@ -13,18 +13,6 @@ if(QT_DIR STREQUAL "QT_DIR-NOTFOUND")
     message(FATAL_ERROR "Can't find QT_DIR")
 endif()
 
-
-#不管用
-#SET(CMAKE_MODULE_PATH ${QT_DIR}/lib/cmake/)
-
-#管用,配合设置find_package( Qt5Widgets NO_SYSTEM_ENVIRONMENT_PATH)
-#set (CMAKE_PREFIX_PATH ${QT_DIR}/lib/cmake/)
-
-#不管用
-#set(CMAKE_FIND_ROOT_PATH ${QT_DIR}/lib/cmake)
-#查找所需的Qt库文件
-#管用,直接加PATHS, 并设置NO_SYSTEM_ENVIRONMENT_PATH
-#find_package(Qt5Widgets PATHS ${QT_DIR}/lib/cmake/ NO_SYSTEM_ENVIRONMENT_PATH)
 find_package(Qt5Widgets PATHS ${QT_DIR}/lib/cmake/ NO_SYSTEM_ENVIRONMENT_PATH)
 find_package(Qt5Core PATHS ${QT_DIR}/lib/cmake/ NO_SYSTEM_ENVIRONMENT_PATH)
 find_package(Qt5Gui PATHS ${QT_DIR}/lib/cmake/ NO_SYSTEM_ENVIRONMENT_PATH)
@@ -86,10 +74,10 @@ set(DPD_FILES
 )
 
 #创建工程
-add_executable(ChinessChess ${DPD_FILES})
+add_executable(Server ${DPD_FILES})
 
 #添加Qt5依赖项
-target_link_libraries(ChinessChess
+target_link_libraries(Server
 	Qt5::Widgets
 	Qt5::Core
 	Qt5::Gui
