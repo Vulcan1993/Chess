@@ -6,12 +6,18 @@ project(ChinessChess)
 
 #设置自动生成moc文件
 set(CMAKE_AUTOMOC ON)
-
+#设置Qt目录
 find_path(QT_DIR QT_DIR-NOTFOUND)
-
 if(QT_DIR STREQUAL "QT_DIR-NOTFOUND")
     message(FATAL_ERROR "Can't find QT_DIR")
 endif()
+
+#设置glog目录
+find_path(GLOG_DIR GLOG_DIR-NOTFOUND)
+if(GLOG_DIR STREQUAL "GLOG_DIR-NOTFOUND")
+    message(FATAL_ERROR "Can't find GLOG_DIR")
+endif()
+
 
 find_package(Qt5Widgets PATHS ${QT_DIR}/lib/cmake/ NO_SYSTEM_ENVIRONMENT_PATH)
 find_package(Qt5Core PATHS ${QT_DIR}/lib/cmake/ NO_SYSTEM_ENVIRONMENT_PATH)
@@ -21,7 +27,12 @@ find_package(Qt5Network PATHS ${QT_DIR}/lib/cmake/ NO_SYSTEM_ENVIRONMENT_PATH)
 #设置包含当前目录
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+#设置glog头文件包含目录
+include_directories(${GLOG_DIR}/include)
+#设置glog共享库包含目录
+link_directories(${GLOG_DIR}/lib)
 set(HEAD_FILES
+	mylog.h
 	aimode.h
 	board.h
 	chessman.h
@@ -37,6 +48,7 @@ set(HEAD_FILES
 )
 
 set(SRC_FILES
+	mylog.cpp
 	aimode.cpp
 	board.cpp
 	controlpanel.cpp
@@ -107,5 +119,6 @@ target_link_libraries(ChinessChess
 	Qt5::Core
 	Qt5::Gui
 	Qt5::Network	
+	glogd
 )
 
